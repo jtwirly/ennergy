@@ -129,7 +129,7 @@ def get_forecast(city_id, api_key):
         print("Error fetching data. Please check the city ID or API key.")
 
 # Usage example
-city_id = 524901  # City ID for Moscow (replace with desired city ID)
+city_id = 5368361  # City ID for Los Angeles (replace with desired city ID)
 get_forecast(city_id, api_key)
 
 # Close the database connection
