@@ -1,52 +1,94 @@
-response={'data': {'timelines': [{'timestep': '1h', 'endTime': '2024-11-03T14:00:00Z', 'startTime': '2024-10-29T14:00:00Z', 'intervals': [{'startTime': '2024-10-29T14:00:00Z', 'values': {'cloudCover': 60, 'humidity': 38, 'temperature': 8.69, 'windSpeed': 3.81}}, {'startTime': '2024-10-29T15:00:00Z', 'values': {'cloudCover': 100, 'humidity': 32.07, 'temperature': 10.49, 'windSpeed': 3.42}}, {'startTime': '2024-10-29T16:00:00Z', 'values': {'cloudCover': 100, 'humidity': 32.49, 'temperature': 11.49, 'windSpeed': 3.56}}, {'startTime': '2024-10-29T17:00:00Z', 'values': {'cloudCover': 100, 'humidity': 34.92, 'temperature': 11.99, 'windSpeed': 3.43}}, {'startTime': '2024-10-29T18:00:00Z', 'values': {'cloudCover': 100, 'humidity': 36.48, 'temperature': 12.49, 'windSpeed': 3.43}}, {'startTime': '2024-10-29T19:00:00Z', 'values': {'cloudCover': 100, 'humidity': 37.91, 'temperature': 12.99, 'windSpeed': 3.61}}, {'startTime': '2024-10-29T20:00:00Z', 'values': {'cloudCover': 100, 'humidity': 40.7, 'temperature': 12.61, 'windSpeed': 3.5}}, {'startTime': '2024-10-29T21:00:00Z', 'values': {'cloudCover': 100, 'humidity': 43.7, 'temperature': 12.5, 'windSpeed': 3.36}}, {'startTime': '2024-10-29T22:00:00Z', 'values': {'cloudCover': 100, 'humidity': 50.19, 'temperature': 11.11, 'windSpeed': 3.15}}, {'startTime': '2024-10-29T23:00:00Z', 'values': {'cloudCover': 100, 'humidity': 56.23, 'temperature': 10.37, 'windSpeed': 3.39}}, {'startTime': '2024-10-30T00:00:00Z', 'values': {'cloudCover': 100, 'humidity': 67.99, 'temperature': 9.48, 'windSpeed': 3.27}}, {'startTime': '2024-10-30T01:00:00Z', 'values': {'cloudCover': 100, 'humidity': 67.99, 'temperature': 9.73, 'windSpeed': 3.45}}, {'startTime': '2024-10-30T02:00:00Z', 'values': {'cloudCover': 100, 'humidity': 72.53, 'temperature': 9.34, 'windSpeed': 3.31}}, {'startTime': '2024-10-30T03:00:00Z', 'values': {'cloudCover': 100, 'humidity': 68, 'temperature': 10.23, 'windSpeed': 4.06}}, {'startTime': '2024-10-30T04:00:00Z', 'values': {'cloudCover': 100, 'humidity': 68, 'temperature': 10.72, 'windSpeed': 3.8}}, {'startTime': '2024-10-30T05:00:00Z', 'values': {'cloudCover': 100, 'humidity': 70.01, 'temperature': 10.73, 'windSpeed': 4.13}}, {'startTime': '2024-10-30T06:00:00Z', 'values': {'cloudCover': 100, 'humidity': 72.01, 'temperature': 10.87, 'windSpeed': 3.95}}, {'startTime': '2024-10-30T07:00:00Z', 'values': {'cloudCover': 100, 'humidity': 84.52, 'temperature': 10.37, 'windSpeed': 4.18}}, {'startTime': '2024-10-30T08:00:00Z', 'values': {'cloudCover': 100, 'humidity': 83.98, 'temperature': 10.51, 'windSpeed': 4.38}}, {'startTime': '2024-10-30T09:00:00Z', 'values': {'cloudCover': 100, 'humidity': 85.52, 'temperature': 11.37, 'windSpeed': 4.31}}, {'startTime': '2024-10-30T10:00:00Z', 'values': {'cloudCover': 100, 'humidity': 87.53, 'temperature': 11.51, 'windSpeed': 4.19}}, {'startTime': '2024-10-30T11:00:00Z', 'values': {'cloudCover': 100, 'humidity': 86.99, 'temperature': 12, 'windSpeed': 3.69}}, {'startTime': '2024-10-30T12:00:00Z', 'values': {'cloudCover': 100, 'humidity': 86.57, 'temperature': 12.51, 'windSpeed': 3.58}}, {'startTime': '2024-10-30T13:00:00Z', 'values': {'cloudCover': 100, 'humidity': 85.55, 'temperature': 13.99, 'windSpeed': 3.72}}, {'startTime': '2024-10-30T14:00:00Z', 'values': {'cloudCover': 88.4, 'humidity': 83.47, 'temperature': 15.27, 'windSpeed': 4.36}}, {'startTime': '2024-10-30T15:00:00Z', 'values': {'cloudCover': 79.37, 'humidity': 79.02, 'temperature': 16.98, 'windSpeed': 4.64}}, {'startTime': '2024-10-30T16:00:00Z', 'values': {'cloudCover': 20.36, 'humidity': 74.03, 'temperature': 18.48, 'windSpeed': 5.14}}, {'startTime': '2024-10-30T17:00:00Z', 'values': {'cloudCover': 48.63, 'humidity': 64.03, 'temperature': 19.71, 'windSpeed': 5}}, {'startTime': '2024-10-30T18:00:00Z', 'values': {'cloudCover': 100, 'humidity': 60.53, 'temperature': 19.98, 'windSpeed': 5.24}}, {'startTime': '2024-10-30T19:00:00Z', 'values': {'cloudCover': 100, 'humidity': 57.54, 'temperature': 20.75, 'windSpeed': 5}}, {'startTime': '2024-10-30T20:00:00Z', 'values': {'cloudCover': 100, 'humidity': 56.54, 'temperature': 20.75, 'windSpeed': 4.86}}, {'startTime': '2024-10-30T21:00:00Z', 'values': {'cloudCover': 98.27, 'humidity': 59.51, 'temperature': 19.48, 'windSpeed': 4.35}}, {'startTime': '2024-10-30T22:00:00Z', 'values': {'cloudCover': 100, 'humidity': 63.28, 'temperature': 17.98, 'windSpeed': 3.73}}, {'startTime': '2024-10-30T23:00:00Z', 'values': {'cloudCover': 100, 'humidity': 67.03, 'temperature': 15.99, 'windSpeed': 3.36}}, {'startTime': '2024-10-31T00:00:00Z', 'values': {'cloudCover': 100, 'humidity': 74.59, 'temperature': 14.72, 'windSpeed': 3.17}}, {'startTime': '2024-10-31T01:00:00Z', 'values': {'cloudCover': 100, 'humidity': 75.56, 'temperature': 15.11, 'windSpeed': 3.11}}, {'startTime': '2024-10-31T02:00:00Z', 'values': {'cloudCover': 100, 'humidity': 83.09, 'temperature': 12.73, 'windSpeed': 2.97}}, {'startTime': '2024-10-31T03:00:00Z', 'values': {'cloudCover': 100, 'humidity': 81.08, 'temperature': 13.73, 'windSpeed': 3.11}}, {'startTime': '2024-10-31T04:00:00Z', 'values': {'cloudCover': 98.7, 'humidity': 86, 'temperature': 11.84, 'windSpeed': 2.86}}, {'startTime': '2024-10-31T05:00:00Z', 'values': {'cloudCover': 73.06, 'humidity': 86, 'temperature': 11.6, 'windSpeed': 2.86}}, {'startTime': '2024-10-31T06:00:00Z', 'values': {'cloudCover': 99.94, 'humidity': 86, 'temperature': 11.73, 'windSpeed': 3.11}}, {'startTime': '2024-10-31T07:00:00Z', 'values': {'cloudCover': 91.41, 'humidity': 85.71, 'temperature': 13.91, 'windSpeed': 4.18}}, {'startTime': '2024-10-31T08:00:00Z', 'values': {'cloudCover': 58.59, 'humidity': 85.86, 'temperature': 13.56, 'windSpeed': 3.91}}, {'startTime': '2024-10-31T09:00:00Z', 'values': {'cloudCover': 34.38, 'humidity': 86.7, 'temperature': 13.11, 'windSpeed': 3.82}}, {'startTime': '2024-10-31T10:00:00Z', 'values': {'cloudCover': 73.44, 'humidity': 86.88, 'temperature': 12.88, 'windSpeed': 3.92}}, {'startTime': '2024-10-31T11:00:00Z', 'values': {'cloudCover': 42.97, 'humidity': 87.08, 'temperature': 12.69, 'windSpeed': 4.07}}, {'startTime': '2024-10-31T12:00:00Z', 'values': {'cloudCover': 35.94, 'humidity': 86.22, 'temperature': 12.98, 'windSpeed': 4.2}}, {'startTime': '2024-10-31T13:00:00Z', 'values': {'cloudCover': 54.69, 'humidity': 81.25, 'temperature': 14.91, 'windSpeed': 4.52}}, {'startTime': '2024-10-31T14:00:00Z', 'values': {'cloudCover': 46.88, 'humidity': 73.76, 'temperature': 17.54, 'windSpeed': 4.15}}, {'startTime': '2024-10-31T15:00:00Z', 'values': {'cloudCover': 70.31, 'humidity': 64.75, 'temperature': 20.1, 'windSpeed': 3.66}}, {'startTime': '2024-10-31T16:00:00Z', 'values': {'cloudCover': 98.44, 'humidity': 58.74, 'temperature': 21.9, 'windSpeed': 3.73}}, {'startTime': '2024-10-31T17:00:00Z', 'values': {'cloudCover': 100, 'humidity': 52.65, 'temperature': 23, 'windSpeed': 4.31}}, {'startTime': '2024-10-31T18:00:00Z', 'values': {'cloudCover': 99.22, 'humidity': 49.21, 'temperature': 23.42, 'windSpeed': 4.47}}, {'startTime': '2024-10-31T19:00:00Z', 'values': {'cloudCover': 98.44, 'humidity': 49.72, 'temperature': 23.52, 'windSpeed': 4.22}}, {'startTime': '2024-10-31T20:00:00Z', 'values': {'cloudCover': 96.88, 'humidity': 51.51, 'temperature': 22.73, 'windSpeed': 3.59}}, {'startTime': '2024-10-31T21:00:00Z', 'values': {'cloudCover': 94.53, 'humidity': 58.06, 'temperature': 20.86, 'windSpeed': 3.37}}, {'startTime': '2024-10-31T22:00:00Z', 'values': {'cloudCover': 100, 'humidity': 62.42, 'temperature': 19.29, 'windSpeed': 4.33}}, {'startTime': '2024-10-31T23:00:00Z', 'values': {'cloudCover': 100, 'humidity': 67.53, 'temperature': 18.94, 'windSpeed': 4.92}}, {'startTime': '2024-11-01T00:00:00Z', 'values': {'cloudCover': 92.97, 'humidity': 73.31, 'temperature': 17.75, 'windSpeed': 4.69}}, {'startTime': '2024-11-01T01:00:00Z', 'values': {'cloudCover': 86.72, 'humidity': 76.3, 'temperature': 17.73, 'windSpeed': 4.87}}, {'startTime': '2024-11-01T02:00:00Z', 'values': {'cloudCover': 74.22, 'humidity': 77.27, 'temperature': 17.98, 'windSpeed': 5.01}}, {'startTime': '2024-11-01T03:00:00Z', 'values': {'cloudCover': 84.38, 'humidity': 80.78, 'temperature': 18.08, 'windSpeed': 5.28}}, {'startTime': '2024-11-01T04:00:00Z', 'values': {'cloudCover': 90.63, 'humidity': 82.52, 'temperature': 17.81, 'windSpeed': 5.21}}, {'startTime': '2024-11-01T05:00:00Z', 'values': {'cloudCover': 75.25, 'humidity': 78.77, 'temperature': 17.86, 'windSpeed': 4.67}}, {'startTime': '2024-11-01T06:00:00Z', 'values': {'cloudCover': 92.19, 'humidity': 82.61, 'temperature': 17.4, 'windSpeed': 5.38}}, {'startTime': '2024-11-01T07:00:00Z', 'values': {'cloudCover': 85.52, 'humidity': 75.57, 'temperature': 17.9, 'windSpeed': 4.68}}, {'startTime': '2024-11-01T08:00:00Z', 'values': {'cloudCover': 99.92, 'humidity': 76.21, 'temperature': 18.06, 'windSpeed': 5.57}}, {'startTime': '2024-11-01T09:00:00Z', 'values': {'cloudCover': 95.99, 'humidity': 73.55, 'temperature': 18.24, 'windSpeed': 5.86}}, {'startTime': '2024-11-01T10:00:00Z', 'values': {'cloudCover': 72.34, 'humidity': 73.05, 'temperature': 18.14, 'windSpeed': 5.91}}, {'startTime': '2024-11-01T11:00:00Z', 'values': {'cloudCover': 96.59, 'humidity': 73.24, 'temperature': 17.95, 'windSpeed': 5.65}}, {'startTime': '2024-11-01T12:00:00Z', 'values': {'cloudCover': 97.71, 'humidity': 71.99, 'temperature': 18.19, 'windSpeed': 5.63}}, {'startTime': '2024-11-01T13:00:00Z', 'values': {'cloudCover': 100, 'humidity': 72.54, 'temperature': 18.35, 'windSpeed': 5.39}}, {'startTime': '2024-11-01T14:00:00Z', 'values': {'cloudCover': 100, 'humidity': 74.4, 'temperature': 18.3, 'windSpeed': 5.11}}, {'startTime': '2024-11-01T15:00:00Z', 'values': {'cloudCover': 100, 'humidity': 71.19, 'temperature': 19, 'windSpeed': 4.88}}, {'startTime': '2024-11-01T16:00:00Z', 'values': {'cloudCover': 35.38, 'humidity': 71.12, 'temperature': 20.22, 'windSpeed': 6.48}}, {'startTime': '2024-11-01T17:00:00Z', 'values': {'cloudCover': 27.46, 'humidity': 59.66, 'temperature': 22.2, 'windSpeed': 6.93}}, {'startTime': '2024-11-01T18:00:00Z', 'values': {'cloudCover': 46.47, 'humidity': 48.66, 'temperature': 22.91, 'windSpeed': 7.38}}, {'startTime': '2024-11-01T19:00:00Z', 'values': {'cloudCover': 10.55, 'humidity': 47.82, 'temperature': 21.11, 'windSpeed': 6.83}}, {'startTime': '2024-11-01T20:00:00Z', 'values': {'cloudCover': 2.6, 'humidity': 47.92, 'temperature': 19.21, 'windSpeed': 7.31}}, {'startTime': '2024-11-01T21:00:00Z', 'values': {'cloudCover': 0.26, 'humidity': 45.97, 'temperature': 16.6, 'windSpeed': 7.29}}, {'startTime': '2024-11-01T22:00:00Z', 'values': {'cloudCover': 0.2, 'humidity': 47.41, 'temperature': 14.34, 'windSpeed': 7.23}}, {'startTime': '2024-11-01T23:00:00Z', 'values': {'cloudCover': 1.17, 'humidity': 49.85, 'temperature': 12.94, 'windSpeed': 6.61}}, {'startTime': '2024-11-02T00:00:00Z', 'values': {'cloudCover': 1.3, 'humidity': 51.41, 'temperature': 12.03, 'windSpeed': 6.01}}, {'startTime': '2024-11-02T01:00:00Z', 'values': {'cloudCover': 5.17, 'humidity': 50.06, 'temperature': 11.23, 'windSpeed': 6.14}}, {'startTime': '2024-11-02T02:00:00Z', 'values': {'cloudCover': 6.87, 'humidity': 50.16, 'temperature': 10.42, 'windSpeed': 5.47}}, {'startTime': '2024-11-02T03:00:00Z', 'values': {'cloudCover': 18.18, 'humidity': 49.21, 'temperature': 9.88, 'windSpeed': 5.19}}, {'startTime': '2024-11-02T04:00:00Z', 'values': {'cloudCover': 15.2, 'humidity': 50.73, 'temperature': 8.84, 'windSpeed': 5.25}}, {'startTime': '2024-11-02T05:00:00Z', 'values': {'cloudCover': 13.29, 'humidity': 54.4, 'temperature': 7.68, 'windSpeed': 5.69}}, {'startTime': '2024-11-02T06:00:00Z', 'values': {'cloudCover': 12.08, 'humidity': 55.79, 'temperature': 7.09, 'windSpeed': 5.63}}, {'startTime': '2024-11-02T07:00:00Z', 'values': {'cloudCover': 5.48, 'humidity': 55.12, 'temperature': 6.81, 'windSpeed': 5.36}}, {'startTime': '2024-11-02T08:00:00Z', 'values': {'cloudCover': 5.06, 'humidity': 55.78, 'temperature': 6.42, 'windSpeed': 4.81}}, {'startTime': '2024-11-02T09:00:00Z', 'values': {'cloudCover': 4.68, 'humidity': 56.42, 'temperature': 6.06, 'windSpeed': 4.32}}, {'startTime': '2024-11-02T10:00:00Z', 'values': {'cloudCover': 5.13, 'humidity': 56.75, 'temperature': 5.71, 'windSpeed': 3.89}}, {'startTime': '2024-11-02T11:00:00Z', 'values': {'cloudCover': 5.47, 'humidity': 55.78, 'temperature': 5.4, 'windSpeed': 3.46}}, {'startTime': '2024-11-02T12:00:00Z', 'values': {'cloudCover': 5.7, 'humidity': 54.34, 'temperature': 5.34, 'windSpeed': 3.27}}, {'startTime': '2024-11-02T13:00:00Z', 'values': {'cloudCover': 5.38, 'humidity': 51.36, 'temperature': 6.25, 'windSpeed': 3.04}}, {'startTime': '2024-11-02T14:00:00Z', 'values': {'cloudCover': 5.29, 'humidity': 48.55, 'temperature': 7.53, 'windSpeed': 2.44}}, {'startTime': '2024-11-02T15:00:00Z', 'values': {'cloudCover': 3.79, 'humidity': 42.67, 'temperature': 8.84, 'windSpeed': 2.23}}, {'startTime': '2024-11-02T16:00:00Z', 'values': {'cloudCover': 9.16, 'humidity': 48.67, 'temperature': 12.11, 'windSpeed': 3.4}}, {'startTime': '2024-11-02T17:00:00Z', 'values': {'cloudCover': 2.25, 'humidity': 33.99, 'temperature': 10.76, 'windSpeed': 2.12}}, {'startTime': '2024-11-02T18:00:00Z', 'values': {'cloudCover': 1.92, 'humidity': 32.47, 'temperature': 11.31, 'windSpeed': 1.91}}, {'startTime': '2024-11-02T19:00:00Z', 'values': {'cloudCover': 0, 'humidity': 33.04, 'temperature': 11.31, 'windSpeed': 2.06}}, {'startTime': '2024-11-02T20:00:00Z', 'values': {'cloudCover': 5.67, 'humidity': 36.37, 'temperature': 10.65, 'windSpeed': 2.19}}, {'startTime': '2024-11-02T21:00:00Z', 'values': {'cloudCover': 30.78, 'humidity': 43.06, 'temperature': 9.3, 'windSpeed': 2.48}}, {'startTime': '2024-11-02T22:00:00Z', 'values': {'cloudCover': 23.24, 'humidity': 49.89, 'temperature': 7.96, 'windSpeed': 2.27}}, {'startTime': '2024-11-02T23:00:00Z', 'values': {'cloudCover': 6.45, 'humidity': 55.57, 'temperature': 7.64, 'windSpeed': 2.15}}, {'startTime': '2024-11-03T00:00:00Z', 'values': {'cloudCover': 6.78, 'humidity': 56.06, 'temperature': 7.59, 'windSpeed': 1.82}}, {'startTime': '2024-11-03T01:00:00Z', 'values': {'cloudCover': 26.75, 'humidity': 56.92, 'temperature': 7.27, 'windSpeed': 1.69}}, {'startTime': '2024-11-03T02:00:00Z', 'values': {'cloudCover': 46.73, 'humidity': 57.77, 'temperature': 6.95, 'windSpeed': 1.56}}, {'startTime': '2024-11-03T03:00:00Z', 'values': {'cloudCover': 66.7, 'humidity': 58.63, 'temperature': 6.63, 'windSpeed': 1.43}}, {'startTime': '2024-11-03T04:00:00Z', 'values': {'cloudCover': 55.74, 'humidity': 59.33, 'temperature': 6.28, 'windSpeed': 1.43}}, {'startTime': '2024-11-03T05:00:00Z', 'values': {'cloudCover': 44.77, 'humidity': 60.03, 'temperature': 5.93, 'windSpeed': 1.43}}, {'startTime': '2024-11-03T06:00:00Z', 'values': {'cloudCover': 33.81, 'humidity': 60.73, 'temperature': 5.58, 'windSpeed': 1.43}}, {'startTime': '2024-11-03T07:00:00Z', 'values': {'cloudCover': 23.14, 'humidity': 61.22, 'temperature': 5.34, 'windSpeed': 1.4}}, {'startTime': '2024-11-03T08:00:00Z', 'values': {'cloudCover': 12.46, 'humidity': 61.71, 'temperature': 5.11, 'windSpeed': 1.38}}, {'startTime': '2024-11-03T09:00:00Z', 'values': {'cloudCover': 1.78, 'humidity': 62.19, 'temperature': 4.87, 'windSpeed': 1.35}}, {'startTime': '2024-11-03T10:00:00Z', 'values': {'cloudCover': 1.75, 'humidity': 63.07, 'temperature': 4.83, 'windSpeed': 1.44}}, {'startTime': '2024-11-03T11:00:00Z', 'values': {'cloudCover': 1.73, 'humidity': 63.95, 'temperature': 4.79, 'windSpeed': 1.54}}, {'startTime': '2024-11-03T12:00:00Z', 'values': {'cloudCover': 1.7, 'humidity': 64.82, 'temperature': 4.76, 'windSpeed': 1.63}}, {'startTime': '2024-11-03T13:00:00Z', 'values': {'cloudCover': 2.72, 'humidity': 58.59, 'temperature': 6.93, 'windSpeed': 1.78}}, {'startTime': '2024-11-03T14:00:00Z', 'values': {'cloudCover': 3.74, 'humidity': 52.35, 'temperature': 9.1, 'windSpeed': 1.94}}]}]}}
-
 import sqlite3
+from datetime import datetime
+import requests
+import os
 
-conn = sqlite3.connect('data_base.db')
+# Connect to SQLite database
+conn = sqlite3.connect("weather.db")
 cursor = conn.cursor()
 
-# Create a table if it doesn't exist
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS weather (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    start_time TEXT,
-    cloud_cover REAL,
-    humidity REAL,
-    temperature REAL,
-    wind_speed REAL
-)
-''')
+# Function to insert location into Location table
+def insert_location(cursor, latitude, longitude, elevation=None):
+    cursor.execute(
+        "INSERT INTO Location (latitude, longitude, elevation) VALUES (?, ?, ?)",
+        (latitude, longitude, elevation),
+    )
+    return cursor.lastrowid
 
-# Sample data to insert
-data_to_insert = [
-    ('2023-10-01T12:00:00Z', 75.0, 60.0, 22.5, 10.0),
-    ('2023-10-01T13:00:00Z', 80.0, 55.0, 23.0, 12.0),
-]
+# Function to insert weather data
+def insert_weather_data(cursor, location_id, date, hour, temperature, humidity, wind_speed, cloud_cover):
+    cursor.execute(
+        """INSERT INTO WeatherData (location_id, date, hour, temperature, humidity, wind_speed, cloud_cover)
+           VALUES (?, ?, ?, ?, ?, ?, ?)""",
+        (location_id, date, hour, temperature, humidity, wind_speed, cloud_cover),
+    )
 
-for entry in data_to_insert:
-    cursor.execute('''
-    INSERT INTO weather (start_time, cloud_cover, humidity, temperature, wind_speed)
-    VALUES (?, ?, ?, ?, ?)
-    ''', entry)
+# Function to insert solar irradiance data
+def insert_solar_irradiance(cursor, location_id, date, hour, GHI, DNI, DHI):
+    cursor.execute(
+        """INSERT INTO SolarIrradiance (location_id, date, hour, GHI, DNI, DHI)
+           VALUES (?, ?, ?, ?, ?, ?)""",
+        (location_id, date, hour, GHI, DNI, DHI),
+    )
 
+# Function to insert energy production data
+def insert_energy_production(cursor, location_id, date, hour, power_output):
+    cursor.execute(
+        """INSERT INTO EnergyProduction (location_id, date, hour, power_output)
+           VALUES (?, ?, ?, ?)""",
+        (location_id, date, hour, power_output),
+    )
 
-# Commit the changes and close the connection
+# Fetch and insert historical weather data
+def fetch_and_store_weather_data(api_key, latitude, longitude):
+    # Sample API call for historical data, replace with actual endpoint
+    url = f"http://api.openweathermap.org/data/2.5/onecall/timemachine"
+    
+    # For simplicity, assume a single date in the past
+    timestamp = int(datetime(2023, 1, 1).timestamp())  # Example date
 
-# Connect to the SQLite database
-conn = sqlite3.connect('data_base.db')
-cursor = conn.cursor()
+    response = requests.get(url, params={
+        "lat": latitude,
+        "lon": longitude,
+        "dt": timestamp,
+        "appid": api_key
+    })
+    
+    if response.status_code == 200:
+        data = response.json()
+        
+        # Insert location (if not already added)
+        location_id = insert_location(cursor, latitude, longitude)
+        
+        # Loop over hourly data and insert into database
+        for hourly_data in data.get("hourly", []):
+            dt = datetime.fromtimestamp(hourly_data["dt"])
+            date = dt.strftime("%Y-%m-%d")
+            hour = dt.hour
+            temp = hourly_data.get("temp")
+            humidity = hourly_data.get("humidity")
+            wind_speed = hourly_data.get("wind_speed")
+            cloud_cover = hourly_data.get("clouds")
+            GHI = hourly_data.get("solar_irradiance", {}).get("GHI")  # Example values, may need actual keys
+            DNI = hourly_data.get("solar_irradiance", {}).get("DNI")
+            DHI = hourly_data.get("solar_irradiance", {}).get("DHI")
+            power_output = hourly_data.get("power_output")  # Placeholder for actual power output data
+            
+            # Insert data into respective tables
+            insert_weather_data(cursor, location_id, date, hour, temp, humidity, wind_speed, cloud_cover)
+            insert_solar_irradiance(cursor, location_id, date, hour, GHI, DNI, DHI)
+            insert_energy_production(cursor, location_id, date, hour, power_output)
+            
+        # Commit the transaction
+        conn.commit()
+    else:
+        print("Error fetching data:", response.status_code)
 
-# Query the weather table
-cursor.execute('SELECT * FROM weather')
+# Example usage
+api_key = os.getenv("WEATHER_API_KEY")  # Replace with your OpenWeatherMap API key
+latitude = 55.7558  # Replace with desired latitude
+longitude = 37.6173  # Replace with desired longitude
+fetch_and_store_weather_data(api_key, latitude, longitude)
 
-# Fetch all records
-records = cursor.fetchall()
-
-# Print the records
-for record in records:
-    print(record)
-
-# Close the connection
-conn.commit()
+# Close the database connection
 conn.close()
-
