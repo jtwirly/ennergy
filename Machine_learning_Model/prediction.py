@@ -4,10 +4,10 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 
 # Load historical data
-data = pd.read_csv('historical_solar_data.csv')
+data = pd.read_csv('historical_weather_data')
 
 # Assume the data has columns: 'GHI', 'DNI', 'Temperature', 'Energy_Production'
-X = data[['GHI', 'DNI', 'Temperature']]  # Features
+X = data[['Cloud coverage', 'DNI', 'Temperature']]  # Features
 y = data['Energy_Production']  # Target variable (energy production)
 
 # Split into training and test sets
