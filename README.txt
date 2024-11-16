@@ -13,4 +13,4 @@ energy generation for corresponding times.
 - `Past Implementations/`: Contains past attempts that have been unsuccessful .
 - `Machine_Learning_model/`: Contains an example method of implementing a machine learning model.
 - `progress_tracking/`: Ideally this folder would keep track of where we get our data from and next steps.
-
+- 'deliverable_2/': A small implementation of our forecaster with all the assests in one location.
