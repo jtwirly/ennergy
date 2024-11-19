@@ -4,13 +4,14 @@ import requests
 from datetime import datetime, timedelta
 import logging
 import json
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# # Load environment variables
+# load_dotenv()
 # Get API key from environment variable
 NREL_API_KEY = os.getenv('NREL_API_KEY')
 
+print(NREL_API_KEY)
 # print(NREL_API_KEY)
 if not NREL_API_KEY:
     raise ValueError("NREL_API_KEY environment variable is not set")

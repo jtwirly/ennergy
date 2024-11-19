@@ -2,62 +2,36 @@ import datetime
 import pandas as pd
 from meteostat import Point, Hourly
 
-
-# Define the location (latitude and longitude for Boston)
-# latitude = 42.3601
-# longitude = -71.0589
-# location_name = "Boston"
-
-# # Define the time period (past 2 months)
-# end = datetime.datetime.now()
-# start = end - datetime.timedelta(days=2*30)  # 2 months ago
-
-# # Fetch hourly data
-# point = Point(latitude, longitude)
-# data = Hourly(point, start, end)
-# data = data.fetch()
-
-# # Add location name to the DataFrame
-# data['location'] = location_name
-
-# # Rename columns to match the database schema
-# data = data.rename(columns={
-#     'temp': 'temperature',
-#     'rhum': 'humidity',
-#     'prcp': 'precipitation',
-#     'wspd': 'windspeed',
-#     'coco': 'cloudcover'
-# })
-
-# # Save the data to a CSV file
-# data.to_csv('deliverable_2/historical_weather_data.csv', index_label='time')
-
-# print("Data for the past 2 months has been saved to 'historical_weather_data.csv' successfully.")
-
-import datetime
-import pandas as pd
-from meteostat import Point, Hourly
-
 # Define the location (latitude and longitude for Boston, Massachusetts)
 latitude = 42.3601
 longitude = -71.0589
 location_name = "Boston"
 
+# File path for the existing data
+file_path = 'deliverable_2/historical_weather_data.csv'
 
-# Define the start and end times as datetime objects 
-start_time = datetime.datetime.fromisoformat("2024-04-17T00:00:00")
-end_time = datetime.datetime.fromisoformat("2024-11-01T00:00:00")
+# Load the existing data if the file exists
+try:
+    existing_data = pd.read_csv(file_path, parse_dates=['time'], index_col='time')
+    print("Existing data loaded successfully.")
+except FileNotFoundError:
+    existing_data = pd.DataFrame()
+    print("No existing data found. Starting fresh.")
 
-# Fetch hourly data
+# Define the start and end times for the new data to fetch
+start_time = datetime.datetime(2023, 10, 27)
+end_time = datetime.datetime(2024, 10, 17)
+
+# Fetch hourly data for the missing range
 point = Point(latitude, longitude)
-data = Hourly(point, start_time, end_time)
-data = data.fetch()
+new_data = Hourly(point, start_time, end_time)
+new_data = new_data.fetch()
 
-# Add location name to the DataFrame
-data['location'] = location_name
+# Add location name to the new data
+new_data['location'] = location_name
 
 # Rename columns to match the database schema
-data = data.rename(columns={
+new_data = new_data.rename(columns={
     'temp': 'temperature',
     'rhum': 'humidity',
     'prcp': 'precipitation',
@@ -65,7 +39,16 @@ data = data.rename(columns={
     'coco': 'cloudcover'
 })
 
-# Save the data to a CSV file
-data.to_csv('deliverable_2/historical_weather_data.csv', index_label='time')
+# Combine existing and new data
+if not existing_data.empty:
+    combined_data = pd.concat([existing_data, new_data])
+else:
+    combined_data = new_data
 
-print("Data for the past 2 months has been saved to 'historical_weather_data.csv' successfully.")
+# Drop duplicate rows based on the index (time)
+combined_data = combined_data[~combined_data.index.duplicated(keep='first')]
+
+# Save the updated data back to the CSV file
+combined_data.to_csv(file_path, index_label='time')
+
+print(f"Historical weather data updated successfully. Data saved to '{file_path}'.")

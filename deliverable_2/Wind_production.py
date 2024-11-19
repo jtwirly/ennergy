@@ -1,133 +1,170 @@
 import requests
-import json
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
+import logging
 
-def fetch_and_save_eia_data(start_time, end_time, api_key, grid_operator=None):
+def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator=None):
     """
-    Fetch data from EIA API and save to CSV file.
+    Fetch data from EIA API in 5-day increments, with intelligent file concatenation.
     
     Parameters:
     start_time (str): Start time in format 'YYYY-MM-DDThh'
     end_time (str): End time in format 'YYYY-MM-DDThh'
     api_key (str): EIA API key
-    grid_operator (str or list, optional): Specific grid operator(s) to filter for (e.g., 'PJM', ['PJM', 'MISO'])
-                                         If None, returns data for all operators
+    source (str): Fuel type to fetch
+    grid_operator (str or list, optional): Specific grid operator(s) to filter for
+    
+    Returns:
+    pd.DataFrame: Fetched and processed data
     """
-    # Construct the URL
-    url = f'https://api.eia.gov/v2/electricity/rto/fuel-type-data/data/?frequency=hourly&data[0]=value&facets[fueltype][]=SUN&facets[fueltype][]=WND&start={start_time}&end={end_time}&sort[0][column]=fueltype&sort[0][direction]=desc&offset=0&length=5000&api_key={api_key}'
+    # Configure logging
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s: %(message)s')
+    logger = logging.getLogger(__name__)
 
-    # Send the GET request to the API
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        data = response.json()
+    try:
+        # Validate inputs
+        if not api_key:
+            raise ValueError("API key is required")
         
-        # Extract the data points
-        records = []
-        for item in data['response']['data']:
-            # If grid_operator is specified, only include matching records
-            if grid_operator is not None:
-                if isinstance(grid_operator, str) and item['respondent'] != grid_operator:
-                    continue
-                elif isinstance(grid_operator, list) and item['respondent'] not in grid_operator:
-                    continue
+        # Convert start and end times to datetime objects
+        start_time = datetime.strptime(start_time, "%Y-%m-%dT%H")
+        end_time = datetime.strptime(end_time, "%Y-%m-%dT%H")
+        
+        # Validate time range
+        if start_time >= end_time:
+            raise ValueError("Start time must be before end time")
+        
+        # Initialize an empty list to hold DataFrames
+        all_data = []
+        
+        # Loop through the date range in 5-day increments
+        current_time = start_time
+        while current_time < end_time:
+            # Define the next range, ensuring we don't exceed the end_time
+            next_time = min(current_time + timedelta(days=5), end_time)
             
-            record = {
-                'datetime': item['period'],
-                'respondent_code': item['respondent'],
-                'respondent_name': item['respondent-name'],
-                'fuel_type': item['fueltype'],
-                'type_name': item['type-name'],
-                'value': float(item['value']),
-                'units': item['value-units']
-            }
-            records.append(record)
-        
-        if not records:
-            print(f"No data found for specified grid operator(s): {grid_operator}")
-            return None
+            # Construct the API URL
+            url = (f'https://api.eia.gov/v2/electricity/rto/fuel-type-data/data/'
+                   f'?frequency=hourly&data[0]=value&facets[fueltype][]={source}'
+                   f'&start={current_time.strftime("%Y-%m-%dT%H")}'
+                   f'&end={next_time.strftime("%Y-%m-%dT%H")}'
+                   f'&sort[0][column]=fueltype&sort[0][direction]=desc'
+                   f'&offset=0&length=5000&api_key={api_key}')
             
-        # Create DataFrame
-        df = pd.DataFrame(records)
+            try:
+                # Send the GET request to the API with timeout
+                response = requests.get(url, timeout=30)
+                response.raise_for_status()  # Raise an exception for bad status codes
+                
+                data = response.json()
+                
+                # Extract the data points
+                records = []
+                for item in data['response']['data']:
+                    # Filter by grid operator if specified
+                    if grid_operator is not None:
+                        if isinstance(grid_operator, str) and item['respondent'] != grid_operator:
+                            continue
+                        elif isinstance(grid_operator, list) and item['respondent'] not in grid_operator:
+                            continue
+                    
+                    try:
+                        record = {
+                            'datetime': item['period'],
+                            'respondent_code': item['respondent'],
+                            'respondent_name': item.get('respondent-name', 'Unknown'),
+                            'fuel_type': item['fueltype'],
+                            'type_name': item.get('type-name', 'Unknown'),
+                            'value': item['value'],
+                            'units': item['value-units']
+                        }
+                        records.append(record)
+                    except (KeyError, ValueError) as e:
+                        logger.warning(f"Skipping record due to error: {e}")
+                
+                # Append to the list if records are found
+                if records:
+                    df = pd.DataFrame(records)
+                    all_data.append(df)
+                
+            except requests.RequestException as e:
+                logger.error(f"API request failed for range {current_time} to {next_time}: {e}")
+            
+            # Move to the next range
+            current_time = next_time
         
-        # Convert datetime strings to datetime objects
-        df['datetime'] = pd.to_datetime(df['datetime'])
-        
-        # Sort by datetime and fuel type
-        df = df.sort_values(['datetime', 'fuel_type'])
-        
-        # Create filename with grid operator and date range
-        grid_suffix = f"_{grid_operator}" if isinstance(grid_operator, str) else "_multiple_grids" if isinstance(grid_operator, list) else ""
-        filename = f'eia_renewable_data{grid_suffix}_{start_time[:10]}_{end_time[:10]}.csv'
-        
-        # Save to CSV
-        df.to_csv(f"deliverable_2/{filename}", index=False)
-        print(f"Data successfully saved to {filename}")
-        
-        # Print summary statistics
-        print("\nSummary Statistics:")
-        print("-" * 50)
-        print("\nTotal Generation by Fuel Type:")
-        fuel_summary = df.groupby('fuel_type').agg({
-            'value': ['sum', 'mean', 'min', 'max', 'count']
-        })
-        print(fuel_summary)
-        
-        print("\nHourly Statistics:")
-        print(f"Total Hours: {df['datetime'].nunique()}")
-        print(f"Date Range: {df['datetime'].min()} to {df['datetime'].max()}")
-        
-        if grid_operator:
-            print(f"\nGrid Operator: {grid_operator}")
-        
-        # Calculate and print percentage of zero values
-        zero_values = (df['value'] == 0).sum()
-        total_values = len(df)
-        print(f"\nZero Generation Periods: {zero_values} ({(zero_values/total_values)*100:.1f}% of total)")
-        
-        return df
-    else:
-        print(f"Failed to retrieve data. Status code: {response.status_code}")
-        return None
-
-# Example usage
-api_key = os.getenv("EIA_API_KEY") #Change to os.getenv(EIA_API_KEY)
-start_time = "2024-09-01T00"
-end_time = "2024-11-01T00"
-
-# Example 1: Get data for just PJM
-df_pjm = fetch_and_save_eia_data(start_time, end_time, api_key, grid_operator='PJM')
-
-# # Example 2: Get data for multiple grid operators
-# df_multiple = fetch_and_save_eia_data(start_time, end_time, api_key, grid_operator=['PJM', 'MISO', 'ERCOT'])
-
-# # Example 3: Get all grid operators
-# df_all = fetch_and_save_eia_data(start_time, end_time, api_key)
-
-
-grid_operator="PJM"
-# Optional: Create a time series plot if you want to visualize the data
-if df_pjm is not None:
-    # Pivot the data for plotting
-    pivot_df = df_pjm.pivot(index='datetime', columns='fuel_type', values='value')
+        # Concatenate all DataFrames if any data was fetched
+        if all_data:
+            full_data = pd.concat(all_data, ignore_index=True)
+            
+            # Convert datetime strings to datetime objects and sort by datetime and fuel type
+            full_data['datetime'] = pd.to_datetime(full_data['datetime'])
+            full_data = full_data.sort_values(by=['datetime', 'fuel_type'])
+            
+            # Ensure output directory exists
+            os.makedirs('deliverable_2', exist_ok=True)
+            
+            # Create filename with grid operator and date range
+            grid_suffix = f"_{grid_operator}" if isinstance(grid_operator, str) else "_multiple_grids" if isinstance(grid_operator, list) else ""
+            filename = f'{source}_data{grid_suffix}.csv'
+            output_path = os.path.join('deliverable_2', filename)
+            
+            # Check if file exists and handle concatenation
+            if os.path.exists(output_path):
+                # Read existing data
+                existing_data = pd.read_csv(output_path, parse_dates=['datetime'])
+                
+                # Determine concatenation strategy based on data timestamps
+                if full_data['datetime'].min() < existing_data['datetime'].min():
+                    # New data is older, prepend
+                    merged_data = pd.concat([full_data, existing_data]).drop_duplicates().sort_values('datetime')
+                else:
+                    # New data is newer, append
+                    merged_data = pd.concat([existing_data, full_data]).drop_duplicates().sort_values('datetime')
+                
+                # Save merged data
+                merged_data.to_csv(output_path, index=False)
+                logger.info(f"Data successfully merged and saved to {output_path}")
+            else:
+                # No existing file, save new data
+                full_data.to_csv(output_path, index=False)
+                logger.info(f"Data successfully saved to {output_path}")
+            
+            return full_data
+        else:
+            logger.warning("No data was fetched.")
+            return pd.DataFrame()
     
-    # Basic time series plot
-    import matplotlib.pyplot as plt
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {e}")
+        return pd.DataFrame()
+
+def main():
+    """
+    Main function to demonstrate script usage with error handling.
+    """
+    # Use environment variable for API key with fallback
+    api_key = os.getenv("EIA_API_KEY")
     
-    plt.figure(figsize=(15, 6))
-    for col in pivot_df.columns:
-        plt.plot(pivot_df.index, pivot_df[col], label=col)
+    if not api_key:
+        print("Error: EIA_API_KEY environment variable not set")
+        return
     
-    plt.title(f'Renewable Generation - {grid_operator}')
-    plt.xlabel('Date')
-    plt.ylabel('Generation (MWh)')
-    plt.legend()
-    plt.grid(True)
-    plt.xticks(rotation=45)
-    plt.tight_layout()
+    try:
+        start_time = "2023-10-27T00"
+        end_time = "2024-10-27T00"
+        
+        # Fetch data for PJM grid operator
+        df = fetch_and_save_eia_data(start_time, end_time, api_key, "NG", grid_operator='NE')
+        
+        # Optional: print basic info about fetched data
+        if not df.empty:
+            print(f"Fetched {len(df)} records")
+            print(df.head())
     
-    # Save the plot
-    plt.savefig(f'deliverable_2/generation_plot_{grid_operator}_{start_time[:10]}_{end_time[:10]}.png')
-    plt.close()
+    except Exception as e:
+        print(f"Error in main execution: {e}")
+
+if __name__ == "__main__":
+    main()
