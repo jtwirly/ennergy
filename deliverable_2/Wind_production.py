@@ -152,8 +152,8 @@ def main():
         return
     
     try:
-        start_time = "2023-10-27T00"
-        end_time = "2024-10-27T00"
+        start_time = "2022-10-27T00"
+        end_time = "2022-10-29T00"
         
         # Fetch data for PJM grid operator
         df = fetch_and_save_eia_data(start_time, end_time, api_key, "NG", grid_operator='NE')
