@@ -42,7 +42,8 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
         current_time = start_time
         while current_time < end_time:
             # Define the next range, ensuring we don't exceed the end_time
-            next_time = min(current_time + timedelta(days=5), end_time)
+            next_time = min(current_time + timedelta(days=1), end_time)
+            print(f"{next_time=}")
             
             # Construct the API URL
             url = (f'https://api.eia.gov/v2/electricity/rto/fuel-type-data/data/'
@@ -111,6 +112,7 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
             output_path = os.path.join('deliverable_2', filename)
             
             # Check if file exists and handle concatenation
+            # Check if file exists and handle concatenation
             if os.path.exists(output_path):
                 # Read existing data
                 existing_data = pd.read_csv(output_path, parse_dates=['datetime'])
@@ -123,14 +125,16 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
                     # New data is newer, append
                     merged_data = pd.concat([existing_data, full_data]).drop_duplicates().sort_values('datetime')
                 
-                # Save merged data
+                # Ensure no duplicates and save merged data
+                merged_data = merged_data.drop_duplicates()
                 merged_data.to_csv(output_path, index=False)
                 logger.info(f"Data successfully merged and saved to {output_path}")
             else:
                 # No existing file, save new data
+                full_data = full_data.drop_duplicates()  # Drop duplicates at the end
                 full_data.to_csv(output_path, index=False)
                 logger.info(f"Data successfully saved to {output_path}")
-            
+
             return full_data
         else:
             logger.warning("No data was fetched.")
@@ -152,11 +156,11 @@ def main():
         return
     
     try:
-        start_time = "2022-10-27T00"
-        end_time = "2022-10-29T00"
+        start_time = "2023-01-27T00"
+        end_time = "2024-10-27T00"
         
         # Fetch data for PJM grid operator
-        df = fetch_and_save_eia_data(start_time, end_time, api_key, "NG", grid_operator='NE')
+        df = fetch_and_save_eia_data(start_time, end_time, api_key, "SUN", grid_operator='NE')
         
         # Optional: print basic info about fetched data
         if not df.empty:
@@ -166,5 +170,38 @@ def main():
     except Exception as e:
         print(f"Error in main execution: {e}")
 
-if __name__ == "__main__":
-    main()
+import pandas as pd
+
+df=pd.read_csv("SUN_data_NE.csv")
+# Example function to find missing hours
+def find_missing_hours(data_frame, upper_limit):
+    # Ensure the datetime column is in datetime format
+    data_frame['datetime'] = pd.to_datetime(data_frame['datetime'])
+    
+    # Define the start and end of the range
+    start_time = pd.Timestamp('2022-10-27T00:00:00')
+    end_time = pd.Timestamp(upper_limit)
+    
+    # Create a complete range of hours between start and end
+    complete_range = pd.date_range(start=start_time, end=end_time, freq='H')
+    
+    # Find the missing hours
+    present_hours = data_frame['datetime']
+    missing_hours = complete_range.difference(present_hours)
+    
+    return missing_hours
+
+# Example usage
+# Replace this with your actual data
+
+upper_limit = '2024-10-27T00'
+
+# Get missing hours
+missing = find_missing_hours(df, upper_limit)
+
+# Output results
+print("Missing Hours:")
+print(missing)
+
+# if __name__ == "__main__":
+#     main()
