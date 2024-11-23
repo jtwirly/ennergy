@@ -7,14 +7,14 @@ import logging
 def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator=None):
     """
     Fetch data from EIA API in 5-day increments, with intelligent file concatenation.
-    
+
     Parameters:
     start_time (str): Start time in format 'YYYY-MM-DDThh'
     end_time (str): End time in format 'YYYY-MM-DDThh'
     api_key (str): EIA API key
     source (str): Fuel type to fetch
     grid_operator (str or list, optional): Specific grid operator(s) to filter for
-    
+
     Returns:
     pd.DataFrame: Fetched and processed data
     """
@@ -26,25 +26,25 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
         # Validate inputs
         if not api_key:
             raise ValueError("API key is required")
-        
+
         # Convert start and end times to datetime objects
         start_time = datetime.strptime(start_time, "%Y-%m-%dT%H")
         end_time = datetime.strptime(end_time, "%Y-%m-%dT%H")
-        
+
         # Validate time range
         if start_time >= end_time:
             raise ValueError("Start time must be before end time")
-        
+
         # Initialize an empty list to hold DataFrames
         all_data = []
-        
+
         # Loop through the date range in 5-day increments
         current_time = start_time
         while current_time < end_time:
             # Define the next range, ensuring we don't exceed the end_time
             next_time = min(current_time + timedelta(days=1), end_time)
             print(f"{next_time=}")
-            
+
             # Construct the API URL
             url = (f'https://api.eia.gov/v2/electricity/rto/fuel-type-data/data/'
                    f'?frequency=hourly&data[0]=value&facets[fueltype][]={source}'
@@ -52,14 +52,14 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
                    f'&end={next_time.strftime("%Y-%m-%dT%H")}'
                    f'&sort[0][column]=fueltype&sort[0][direction]=desc'
                    f'&offset=0&length=5000&api_key={api_key}')
-            
+
             try:
                 # Send the GET request to the API with timeout
                 response = requests.get(url, timeout=30)
                 response.raise_for_status()  # Raise an exception for bad status codes
-                
+
                 data = response.json()
-                
+
                 # Extract the data points
                 records = []
                 for item in data['response']['data']:
@@ -69,7 +69,7 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
                             continue
                         elif isinstance(grid_operator, list) and item['respondent'] not in grid_operator:
                             continue
-                    
+
                     try:
                         record = {
                             'datetime': item['period'],
@@ -83,40 +83,40 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
                         records.append(record)
                     except (KeyError, ValueError) as e:
                         logger.warning(f"Skipping record due to error: {e}")
-                
+
                 # Append to the list if records are found
                 if records:
                     df = pd.DataFrame(records)
                     all_data.append(df)
-                
+
             except requests.RequestException as e:
                 logger.error(f"API request failed for range {current_time} to {next_time}: {e}")
-            
+
             # Move to the next range
             current_time = next_time
-        
+
         # Concatenate all DataFrames if any data was fetched
         if all_data:
             full_data = pd.concat(all_data, ignore_index=True)
-            
+
             # Convert datetime strings to datetime objects and sort by datetime and fuel type
             full_data['datetime'] = pd.to_datetime(full_data['datetime'])
             full_data = full_data.sort_values(by=['datetime', 'fuel_type'])
-            
+
             # Ensure output directory exists
             os.makedirs('deliverable_2', exist_ok=True)
-            
+
             # Create filename with grid operator and date range
             grid_suffix = f"_{grid_operator}" if isinstance(grid_operator, str) else "_multiple_grids" if isinstance(grid_operator, list) else ""
             filename = f'{source}_data{grid_suffix}.csv'
             output_path = os.path.join('deliverable_2', filename)
-            
+
             # Check if file exists and handle concatenation
             # Check if file exists and handle concatenation
             if os.path.exists(output_path):
                 # Read existing data
                 existing_data = pd.read_csv(output_path, parse_dates=['datetime'])
-                
+
                 # Determine concatenation strategy based on data timestamps
                 if full_data['datetime'].min() < existing_data['datetime'].min():
                     # New data is older, prepend
@@ -124,7 +124,7 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
                 else:
                     # New data is newer, append
                     merged_data = pd.concat([existing_data, full_data]).drop_duplicates().sort_values('datetime')
-                
+
                 # Ensure no duplicates and save merged data
                 merged_data = merged_data.drop_duplicates()
                 merged_data.to_csv(output_path, index=False)
@@ -139,7 +139,7 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
         else:
             logger.warning("No data was fetched.")
             return pd.DataFrame()
-    
+
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
         return pd.DataFrame()
@@ -149,59 +149,59 @@ def main():
     Main function to demonstrate script usage with error handling.
     """
     # Use environment variable for API key with fallback
-    api_key = os.getenv("EIA_API_KEY")
-    
+    api_key = "zPamRVTDhbg4KhhEqRRCD6Xod9QWpyyp3geG7uWj"
+
     if not api_key:
         print("Error: EIA_API_KEY environment variable not set")
         return
-    
+
     try:
-        start_time = "2023-01-27T00"
+        start_time = "2022-10-27T00"
         end_time = "2024-10-27T00"
-        
+
         # Fetch data for PJM grid operator
-        df = fetch_and_save_eia_data(start_time, end_time, api_key, "SUN", grid_operator='NE')
-        
+        df = fetch_and_save_eia_data(start_time, end_time, api_key, "NG", grid_operator='NE')
+
         # Optional: print basic info about fetched data
         if not df.empty:
             print(f"Fetched {len(df)} records")
             print(df.head())
-    
+
     except Exception as e:
         print(f"Error in main execution: {e}")
 
-import pandas as pd
+# import pandas as pd
 
-df=pd.read_csv("SUN_data_NE.csv")
+# df=pd.read_csv("historical_weather_data.csv")
 # Example function to find missing hours
 def find_missing_hours(data_frame, upper_limit):
     # Ensure the datetime column is in datetime format
-    data_frame['datetime'] = pd.to_datetime(data_frame['datetime'])
-    
+    data_frame['time'] = pd.to_datetime(data_frame['time'])
+
     # Define the start and end of the range
     start_time = pd.Timestamp('2022-10-27T00:00:00')
     end_time = pd.Timestamp(upper_limit)
-    
+
     # Create a complete range of hours between start and end
     complete_range = pd.date_range(start=start_time, end=end_time, freq='H')
-    
+
     # Find the missing hours
-    present_hours = data_frame['datetime']
+    present_hours = data_frame['time']
     missing_hours = complete_range.difference(present_hours)
-    
+
     return missing_hours
 
-# Example usage
-# Replace this with your actual data
+# # Example usage
+# # Replace this with your actual data
 
-upper_limit = '2024-10-27T00'
+# upper_limit = '2024-10-27T00'
 
-# Get missing hours
-missing = find_missing_hours(df, upper_limit)
+# # Get missing hours
+# missing = find_missing_hours(df, upper_limit)
 
-# Output results
-print("Missing Hours:")
-print(missing)
+# # Output results
+# print("Missing Hours:")
+# print(missing)
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()

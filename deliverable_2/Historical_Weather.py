@@ -8,7 +8,7 @@ longitude = -71.0589
 location_name = "Boston"
 
 # File path for the existing data
-file_path = 'deliverable_2/historical_weather_data.csv'
+file_path = 'extra_data.csv'
 
 # Load the existing data if the file exists
 try:
@@ -19,8 +19,8 @@ except FileNotFoundError:
     print("No existing data found. Starting fresh.")
 
 # Define the start and end times for the new data to fetch
-start_time = datetime.datetime(2023, 10, 27)
-end_time = datetime.datetime(2024, 10, 17)
+start_time = datetime.datetime(2023, 10, 17)
+end_time = datetime.datetime(2023, 10, 27)
 
 # Fetch hourly data for the missing range
 point = Point(latitude, longitude)
@@ -49,6 +49,6 @@ else:
 combined_data = combined_data[~combined_data.index.duplicated(keep='first')]
 
 # Save the updated data back to the CSV file
-combined_data.to_csv(file_path, index_label='time')
+combined_data.to_csv("extra_data.csv", index_label='time')
 
 print(f"Historical weather data updated successfully. Data saved to '{file_path}'.")
