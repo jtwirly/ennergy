@@ -115,7 +115,7 @@ def fetch_nrel_data(location, start_date, end_date, api_key):
             "latitude": get_location_coordinates(location)[0],
             "longitude": get_location_coordinates(location)[1],
             "start_date": start_date.strftime('%Y-%m-%d'),
-            "end_date": end_date.strftime('%Y-%m-%d')
+            "end_date": end_datÅe.strftime('%Y-%m-%d')
         }
         response = requests.get(url, params=params)
         data.extend(process_nrel_data(response.json(), source_type, location))

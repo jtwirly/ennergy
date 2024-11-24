@@ -1,9 +1,12 @@
+# with day of week
+
 import pandas as pd
 import numpy as np
 from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
+import sqlite3
 
 def get_season(month):
     if month in [12, 1, 2]: return 1
@@ -12,21 +15,37 @@ def get_season(month):
     else: return 4
 
 def prepare_data():
-    # Load data
-    weather_df = pd.read_csv('historical_weather_data.csv')
-    renewable_df = pd.read_csv('renewable_energy_Data.csv')
+    # Connect to SQLite database
+    conn = sqlite3.connect('energy_data_NE.db')
+    cursor = conn.cursor()
+
+    # Load data from tables
+    cursor.execute("SELECT * FROM weather_data")
+    weather_data = cursor.fetchall()
+    weather_df = pd.DataFrame(weather_data, columns=['id', 'location', 'timestamp', 'temperature', 'humidity', 'windspeed', 'cloudcover'])
+
+    cursor.execute("SELECT * FROM energy_production")
+    energy_data = cursor.fetchall()
+    energy_df = pd.DataFrame(energy_data, columns=['id', 'location', 'timestamp', 'source_type', 'value'])
+
+    cursor.execute("SELECT * FROM demand_data_NE")
+    demand_data = cursor.fetchall()
+    demand_df = pd.DataFrame(demand_data, columns=['id', 'datetime', 'region', 'Demand', 'Net Generation'])
 
     # Convert timestamps
-    weather_df['timestamp'] = pd.to_datetime(weather_df['time'])
-    renewable_df['timestamp'] = pd.to_datetime(renewable_df['datetime'])
+    weather_df['timestamp'] = pd.to_datetime(weather_df['timestamp'])
+    energy_df['timestamp'] = pd.to_datetime(energy_df['timestamp'])
+    demand_df['datetime'] = pd.to_datetime(demand_df['datetime'])
 
     # Filter for wind energy
-    renewable_df = renewable_df[renewable_df['fuel_type'] == 'WND']
+    energy_df = energy_df[energy_df['source_type'] == 'wind']
 
     # Add time features
     weather_df['season'] = weather_df['timestamp'].dt.month.map(get_season)
     weather_df['hour'] = weather_df['timestamp'].dt.hour
     weather_df['day_of_week'] = weather_df['timestamp'].dt.dayofweek
+    demand_df['hour'] = demand_df['datetime'].dt.hour
+    demand_df['day_of_week'] = demand_df['datetime'].dt.dayofweek
 
     # Create multiple rolling averages
     for window in [3, 6, 12, 24]:
@@ -35,14 +54,14 @@ def prepare_data():
         weather_df[f'humid_{window}h'] = weather_df.groupby('location')['humidity'].rolling(window).mean().reset_index(0, drop=True)
 
     # Merge datasets
-    df = pd.merge(weather_df, renewable_df, on='timestamp', how='inner')
+    df = pd.merge(weather_df, energy_df, on='timestamp', how='inner')
+    df = pd.merge(df, demand_df, left_on='timestamp', right_on='datetime', how='inner')
     print(f"Shape after merge: {df.shape}")
 
     # Base features
     base_features = [
-        'temperature', 'humidity', 'precipitation',
-        'windspeed', 'cloudcover', 'season', 'hour',
-        'day_of_week'
+        'temperature', 'humidity', 'windspeed', 'cloudcover', 'season', 'hour',
+        'day_of_week', 'Demand', 'Net Generation'
     ]
 
     # Add rolling average features
@@ -69,6 +88,9 @@ def prepare_data():
 
     # Target variable
     y = df['value']
+
+    # Close database connection
+    conn.close()
 
     return X, y
 
