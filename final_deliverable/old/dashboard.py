@@ -150,3 +150,6 @@ class EnergyDashboard:
 
             fig = self.create_plots(predictions)
             fig.show()
+
+# Make sure the class is available for import
+__all__ = ['EnergyDashboard']
