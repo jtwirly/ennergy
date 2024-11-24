@@ -105,49 +105,80 @@ class EnergyDashboard:
             
         return pd.DataFrame(predictions)
 
-    def create_plots(self, predictions):
-        """Create interactive plots with dark theme"""
-        fig = make_subplots(
-            rows=3, 
-            cols=1,
-            subplot_titles=(
-                'Energy Generation Forecast',
-                'Demand Forecast',
-                'Generation Mix'
-            ),
-            vertical_spacing=0.1,
-            row_heights=[0.4, 0.3, 0.3]
-        )
-        
-        # Generation predictions
-        for source in ['solar', 'wind']:
-            color = 'orange' if source == 'solar' else '#00B4D8'
+    def create_plots(self, predictions, overlay=False):
+        """Create interactive plots with option to overlay"""
+        if not overlay:
+            # Original separate plots
+            fig = make_subplots(
+                rows=3, 
+                cols=1,
+                subplot_titles=(
+                    'Energy Generation Forecast',
+                    'Demand Forecast',
+                    'Generation Mix'
+                ),
+                vertical_spacing=0.1,
+                row_heights=[0.4, 0.3, 0.3]
+            )
+            
+            # Generation predictions
+            for source in ['solar', 'wind']:
+                color = 'orange' if source == 'solar' else '#00B4D8'
+                fig.add_trace(
+                    go.Scatter(
+                        x=predictions['datetime'],
+                        y=predictions[source],
+                        name=source.title(),
+                        mode='lines+markers',
+                        line=dict(color=color, width=2),
+                        marker=dict(size=6)
+                    ),
+                    row=1, 
+                    col=1
+                )
+            
+            # Demand prediction
             fig.add_trace(
                 go.Scatter(
                     x=predictions['datetime'],
-                    y=predictions[source],
-                    name=source.title(),
-                    mode='lines+markers',
-                    line=dict(color=color, width=2),
-                    marker=dict(size=6)
+                    y=predictions['demand'],
+                    name='Demand',
+                    line=dict(color='#FF4B4B', width=2)
                 ),
-                row=1, 
+                row=2, 
                 col=1
             )
+            
+        else:
+            # Overlaid plot
+            fig = make_subplots(
+                rows=2, 
+                cols=1,
+                subplot_titles=(
+                    'Energy Generation and Demand Forecast (Overlaid)',
+                    'Generation Mix'
+                ),
+                vertical_spacing=0.2,
+                row_heights=[0.7, 0.3]
+            )
+            
+            # Generation and demand predictions (overlaid)
+            for source in ['solar', 'wind', 'demand']:
+                color = 'orange' if source == 'solar' else '#00B4D8' if source == 'wind' else '#FF4B4B'
+                fig.add_trace(
+                    go.Scatter(
+                        x=predictions['datetime'],
+                        y=predictions[source],
+                        name=source.title(),
+                        mode='lines+markers',
+                        line=dict(color=color, width=2),
+                        marker=dict(size=6)
+                    ),
+                    row=1, 
+                    col=1
+                )
         
-        # Demand prediction
-        fig.add_trace(
-            go.Scatter(
-                x=predictions['datetime'],
-                y=predictions['demand'],
-                name='Demand',
-                line=dict(color='#FF4B4B', width=2)
-            ),
-            row=2, 
-            col=1
-        )
-        
-        # Generation mix
+        # Generation mix (same for both views)
         total_gen = predictions['solar'] + predictions['wind']
         fig.add_trace(
             go.Bar(
@@ -156,7 +187,7 @@ class EnergyDashboard:
                 name='Solar %',
                 marker_color='#FFA62B'
             ),
-            row=3, 
+            row=3 if not overlay else 2,
             col=1
         )
         fig.add_trace(
@@ -166,7 +197,7 @@ class EnergyDashboard:
                 name='Wind %',
                 marker_color='#00B4D8'
             ),
-            row=3, 
+            row=3 if not overlay else 2,
             col=1
         )
         
@@ -186,10 +217,22 @@ class EnergyDashboard:
         )
         
         # Update axes
-        fig.update_xaxes(title_text="Time", row=3, col=1)
-        fig.update_yaxes(title_text="Generation (MWh)", row=1, col=1)
-        fig.update_yaxes(title_text="Demand (MWh)", row=2, col=1)
-        fig.update_yaxes(title_text="Percentage (%)", row=3, col=1)
+        fig.update_xaxes(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='rgba(128,128,128,0.2)',
+            title_text="Time",
+            title_font=dict(size=14),
+            tickfont=dict(size=12)
+        )
+        
+        fig.update_yaxes(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='rgba(128,128,128,0.2)',
+            title_font=dict(size=14),
+            tickfont=dict(size=12)
+        )
 
         return fig
 
@@ -262,8 +305,11 @@ def main():
     tab1, tab2, tab3 = st.tabs(["📈 Forecasts", "📊 Statistics", "ℹ️ Info"])
     
     with tab1:
+        overlay_plots = st.checkbox("Overlay Generation and Demand", value=False)
+
         # Display plots
-        st.plotly_chart(dashboard.create_plots(predictions), use_container_width=True)
+        st.plotly_chart(dashboard.create_plots(predictions, overlay=overlay_plots), 
+                       use_container_width=True)        
         
         # Display raw data if requested
         if st.checkbox("Show raw data"):
