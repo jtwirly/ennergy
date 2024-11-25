@@ -1,12 +1,13 @@
 import requests
 import pandas as pd
 from datetime import datetime, timedelta
+import pytz
 import os
 import logging
 
-def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator=None):
+def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator=None, timezone='US/Eastern'):
     """
-    Fetch data from EIA API in 5-day increments, with intelligent file concatenation.
+    Fetch data from EIA API in 5-day increments, with intelligent file concatenation, handling timezones.
 
     Parameters:
     start_time (str): Start time in format 'YYYY-MM-DDThh'
@@ -14,6 +15,7 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
     api_key (str): EIA API key
     source (str): Fuel type to fetch
     grid_operator (str or list, optional): Specific grid operator(s) to filter for
+    timezone (str): Timezone to localize the datetime column (default: 'US/Eastern')
 
     Returns:
     pd.DataFrame: Fetched and processed data
@@ -27,9 +29,10 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
         if not api_key:
             raise ValueError("API key is required")
 
-        # Convert start and end times to datetime objects
-        start_time = datetime.strptime(start_time, "%Y-%m-%dT%H")
-        end_time = datetime.strptime(end_time, "%Y-%m-%dT%H")
+        # Convert start and end times to timezone-aware datetime objects
+        local_tz = pytz.timezone(timezone)
+        start_time = local_tz.localize(datetime.strptime(start_time, "%Y-%m-%dT%H"))
+        end_time = local_tz.localize(datetime.strptime(end_time, "%Y-%m-%dT%H"))
 
         # Validate time range
         if start_time >= end_time:
@@ -43,7 +46,6 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
         while current_time < end_time:
             # Define the next range, ensuring we don't exceed the end_time
             next_time = min(current_time + timedelta(days=1), end_time)
-            print(f"{next_time=}")
 
             # Construct the API URL
             url = (f'https://api.eia.gov/v2/electricity/rto/fuel-type-data/data/'
@@ -56,7 +58,7 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
             try:
                 # Send the GET request to the API with timeout
                 response = requests.get(url, timeout=30)
-                response.raise_for_status()  # Raise an exception for bad status codes
+                response.raise_for_status()
 
                 data = response.json()
 
@@ -72,7 +74,7 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
 
                     try:
                         record = {
-                            'datetime': item['period'],
+                            'datetime': local_tz.localize(datetime.strptime(item['period'], "%Y-%m-%dT%H:%M:%S")),
                             'respondent_code': item['respondent'],
                             'respondent_name': item.get('respondent-name', 'Unknown'),
                             'fuel_type': item['fueltype'],
@@ -99,8 +101,7 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
         if all_data:
             full_data = pd.concat(all_data, ignore_index=True)
 
-            # Convert datetime strings to datetime objects and sort by datetime and fuel type
-            full_data['datetime'] = pd.to_datetime(full_data['datetime'])
+            # Sort by datetime and fuel type
             full_data = full_data.sort_values(by=['datetime', 'fuel_type'])
 
             # Ensure output directory exists
@@ -109,31 +110,22 @@ def fetch_and_save_eia_data(start_time, end_time, api_key, source, grid_operator
             # Create filename with grid operator and date range
             grid_suffix = f"_{grid_operator}" if isinstance(grid_operator, str) else "_multiple_grids" if isinstance(grid_operator, list) else ""
             filename = f'{source}_data{grid_suffix}.csv'
-            output_path = os.path.join('deliverable_2', filename)
+            output_path = os.path.join('deliverable_2', "test")
 
-            # Check if file exists and handle concatenation
             # Check if file exists and handle concatenation
             if os.path.exists(output_path):
                 # Read existing data
                 existing_data = pd.read_csv(output_path, parse_dates=['datetime'])
 
-                # Determine concatenation strategy based on data timestamps
-                if full_data['datetime'].min() < existing_data['datetime'].min():
-                    # New data is older, prepend
-                    merged_data = pd.concat([full_data, existing_data]).drop_duplicates().sort_values('datetime')
-                else:
-                    # New data is newer, append
-                    merged_data = pd.concat([existing_data, full_data]).drop_duplicates().sort_values('datetime')
+                # Convert existing data's datetime column to timezone-aware
+                existing_data['datetime'] = pd.to_datetime(existing_data['datetime']).dt.tz_localize(local_tz)
 
-                # Ensure no duplicates and save merged data
-                merged_data = merged_data.drop_duplicates()
-                merged_data.to_csv(output_path, index=False)
-                logger.info(f"Data successfully merged and saved to {output_path}")
-            else:
-                # No existing file, save new data
-                full_data = full_data.drop_duplicates()  # Drop duplicates at the end
-                full_data.to_csv(output_path, index=False)
-                logger.info(f"Data successfully saved to {output_path}")
+                # Concatenate and remove duplicates
+                full_data = pd.concat([existing_data, full_data]).drop_duplicates(subset='datetime').sort_values('datetime')
+
+            # Save the full dataset to the CSV
+            full_data.to_csv(output_path, index=False)
+            logger.info(f"Data successfully saved to {output_path}")
 
             return full_data
         else:
@@ -157,7 +149,7 @@ def main():
 
     try:
         start_time = "2022-10-27T00"
-        end_time = "2024-10-27T00"
+        end_time = "2022-10-29T00"
 
         # Fetch data for PJM grid operator
         df = fetch_and_save_eia_data(start_time, end_time, api_key, "NG", grid_operator='NE')
