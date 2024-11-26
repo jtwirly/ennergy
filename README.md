@@ -19,6 +19,20 @@ energy generation and demand for corresponding times.
 
 The Energy Generation Forecast Dashboard is a comprehensive solution that empowers grid operators to make informed decisions and optimize their renewable energy operations. Powered by advanced AI and machine learning, the dashboard delivers precise, real-time predictions for wind, solar, and demand patterns, enabling operators to balance supply and demand, maximize renewable energy generation, and minimize costly inefficiencies.
 
+This dashboard provides energy generation forecasts using machine learning models trained on historical data.
+
+Features:
+-Solar generation prediction
+-Wind generation prediction
+-Demand forecasting
+-Generation mix analysis
+-Timezone support (Currently showing: NE (Eastern Time))
+
+Data Sources:
+-Historical weather data
+-Past generation records
+-Demand patterns
+
 Links: 
 https://energyforecasting.vercel.app/
 https://energyforecaster.streamlit.app/ 
@@ -78,3 +92,25 @@ This project is licensed under the [MIT License](LICENSE).
 ## Contact
 
 For any questions or inquiries, please contact us at [jturliuk@mit.edu](mailto:jturliuk@mit.edu) and [clbanjai@mit.edu](mailto:clbanjai@mit.edu).
+
+## Images
+
+Website:
+![alt text](image-4.png)
+
+Interface:
+![alt text](image-5.png)
+![alt text](image-6.png)
+![alt text](image-7.png)
+![alt text](image-8.png)
+
+You can also see past data:
+![alt text](image-9.png)
+![alt text](image-10.png)
+![alt text](image-11.png)
+![alt text](image-12.png)
+
+Accuracy:
+![alt text](image-3.png)
+
+![alt text](image.png)
