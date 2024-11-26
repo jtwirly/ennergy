@@ -246,3 +246,143 @@ class EnergyDashboard:
         )
 
         return fig
+
+
+def main():
+    st.set_page_config(page_title="Energy Generation Forecast", layout="wide")
+
+    st.title("⚡ Energy Generation Forecast Dashboard")
+
+    # Initialize dashboard
+    dashboard = EnergyDashboard()
+
+    # Get available date range (from your database for historical validation)
+    min_date, max_date = dashboard.get_available_dates()
+
+    # Extend max_date to allow for future predictions
+    extended_max_date = datetime.now() + timedelta(days=7)
+
+    # Sidebar
+    st.sidebar.header("Forecast Settings")
+
+    # Timezone selection
+    timezone_options = {
+        'NE (Eastern Time)': 'America/New_York',
+        'UTC': 'UTC'
+    }
+    selected_timezone = st.sidebar.selectbox(
+        'Select Timezone',
+        options=list(timezone_options.keys()),
+        index=0
+    )
+    timezone = timezone_options[selected_timezone]
+
+    # Show available date range
+    st.sidebar.info(f"""
+        Data range:
+        - Historical data: {min_date.strftime('%Y-%m-%d')} to {max_date.strftime('%Y-%m-%d')}
+        - Predictions available up to: {extended_max_date.strftime('%Y-%m-%d')}
+
+        Note: Future predictions use Meteostat weather data
+    """)
+
+    # Date selection with extended range
+    selected_date = st.sidebar.date_input(
+        "Select forecast date",
+        min_value=min_date.date(),
+        max_value=extended_max_date.date(),
+        value=datetime.now().date()
+    )
+
+    # Time selection
+    selected_time = st.sidebar.time_input(
+        "Select start time",
+        value=datetime.strptime('00:00', '%H:%M').time()
+    )
+
+    # Combine date and time
+    start_datetime = datetime.combine(selected_date, selected_time)
+
+    # Add warning for future dates
+    if start_datetime.date() > datetime.now().date():
+        st.sidebar.warning("⚠️ Showing predictions using Meteostat forecast data")
+    elif start_datetime.date() < min_date.date():
+        st.error(f"Selected date is before available historical data ({min_date.strftime('%Y-%m-%d')})")
+        return
+
+    # Get predictions
+    with st.spinner('Generating predictions...'):
+        predictions = dashboard.get_predictions(start_datetime)
+
+        if predictions is None or predictions.empty:
+            st.error(f"""
+                No data available for {start_datetime.strftime('%Y-%m-%d %H:%M')}.
+                This might be because:
+                1. No weather data available from Meteostat
+                2. Error in data retrieval
+
+                Try selecting a different date or check Meteostat service status.
+            """)
+            return
+
+    # Create tabs for different views
+    tab1, tab2, tab3 = st.tabs(["📈 Forecasts", "📊 Statistics", "ℹ️ Info"])
+
+    with tab1:
+        overlay_plots = st.checkbox("Overlay Generation and Demand", value=False)
+
+        # Display plots with timezone support
+        st.plotly_chart(dashboard.create_plots(predictions, overlay=overlay_plots, timezone=timezone),
+                       use_container_width=True)
+
+        # Display raw data if requested
+        if st.checkbox("Show raw data"):
+            # Convert datetime to selected timezone for display
+            display_predictions = predictions.copy()
+            display_predictions['datetime'] = display_predictions['datetime'].dt.tz_localize('UTC').dt.tz_convert(timezone)
+            st.dataframe(display_predictions)
+
+    with tab2:
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.metric(
+                "Peak Solar Generation",
+                f"{predictions['solar'].max():.1f} MWh",
+                f"{predictions['solar'].mean():.1f} MWh avg"
+            )
+
+        with col2:
+            st.metric(
+                "Peak Wind Generation",
+                f"{predictions['wind'].max():.1f} MWh",
+                f"{predictions['wind'].mean():.1f} MWh avg"
+            )
+
+        with col3:
+            st.metric(
+                "Peak Demand",
+                f"{predictions['demand'].max():.1f} MWh",
+                f"{predictions['demand'].mean():.1f} MWh avg"
+            )
+
+    with tab3:
+        st.markdown(f"""
+        ### About this Dashboard
+        This dashboard provides energy generation forecasts using machine learning models trained on historical data.
+
+        **Features:**
+        - Solar generation prediction
+        - Wind generation prediction
+        - Demand forecasting
+        - Generation mix analysis
+        - Timezone support (Currently showing: {selected_timezone})
+
+        **Data Sources:**
+        - Historical weather data
+        - Past generation records
+        - Demand patterns
+        """)
+
+if __name__ == "__main__":
+    main()
