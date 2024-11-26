@@ -21,9 +21,9 @@ class EnergyDashboard:
         """Load the pre-trained models"""
         try:
             self.models = {
-                'solar': self.load_model('final_deliverable/models/solar_model.pkl'),
-                'wind': self.load_model('final_deliverable/models/wind_model.pkl'),
-                'demand': self.load_model('final_deliverable/models/demand_model.pkl')
+                'solar': self.load_model('models/solar_model.pkl'),
+                'wind': self.load_model('models/wind_model.pkl'),
+                'demand': self.load_model('models/demand_model.pkl')
             }
             st.success("✅ Models loaded successfully")
         except Exception as e:
@@ -37,17 +37,16 @@ class EnergyDashboard:
 
     def get_available_dates(self):
         """Get range of available dates in the database"""
-        conn = sqlite3.connect(self.database_path)
-        query = """
-        SELECT MIN(time) as min_date, MAX(time) as max_date
-        FROM historical_weather_data
-        """
-        dates = pd.read_sql_query(query, conn)
-        conn.close()
-
-        min_date = pd.to_datetime(dates['min_date'][0])
-        max_date = pd.to_datetime(dates['max_date'][0])
-
+        # conn = sqlite3.connect(self.database_path)
+        # query = """
+        # SELECT MIN(time) as min_date, MAX(time) as max_date
+        # FROM historical_weather_data
+        # """
+        # dates = pd.read_sql_query(query, conn)
+            # conn.close()
+        min_date = pd.to_datetime('2022-10-27 00:00:00')
+        max_date = pd.to_datetime('2024-10-27 00:00:00')
+        print(f"{max_date}")
         return min_date, max_date
 
     def prepare_features(self, weather_data):
