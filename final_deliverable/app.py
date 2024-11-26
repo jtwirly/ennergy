@@ -21,9 +21,9 @@ class EnergyDashboard:
         """Load the pre-trained models"""
         try:
             self.models = {
-                'solar': joblib.load('solar_model.joblib'),
-                'wind': joblib.load('wind_model.joblib'),
-                'demand': joblib.load('demand_model.joblib')
+                'solar': joblib.load('models/solar_model.joblib'),
+                'wind': joblib.load('models/wind_model.joblib'),
+                'demand': joblib.load('models/demand_model.joblib')
             }
             st.success("✅ Models loaded successfully")
         except Exception as e:
