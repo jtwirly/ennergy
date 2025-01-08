@@ -18,16 +18,14 @@ class EnergyDashboard:
         self.load_models()
 
     def load_models(self):
-        """Load the pre-trained models"""
+        """Load the pre-trained hierarchical RNN model"""
         try:
-            self.models = {
-                'solar': self.load_model('models/solar_model.pkl'),
-                'wind': self.load_model('models/wind_model.pkl'),
-                'demand': self.load_model('models/demand_model.pkl')
-            }
-            st.success("✅ Models loaded successfully")
+            self.model = HierarchicalEnergyForecaster(input_size=12)
+            self.model.load_state_dict(torch.load('hierarchical_rnn_model.pkl'))
+            self.model.eval()
+            st.success("✅ Model loaded successfully")
         except Exception as e:
-            st.error(f"Error loading models: {str(e)}")
+            st.error(f"Error loading model: {str(e)}")
 
     @staticmethod
     def load_model(filepath):
@@ -95,156 +93,132 @@ class EnergyDashboard:
             st.error(f"Error fetching Meteostat data: {str(e)}")
             return None
 
-    def get_predictions(self, start_date):
-        """Get predictions using Meteostat data"""
-        pred_data = self.get_meteostat_data(start_date)
+def get_predictions(self, start_date):
+    """Get predictions using hierarchical RNN model"""
+    pred_data = self.get_meteostat_data(start_date)
 
-        if pred_data is None or pred_data.empty:
-            return None
+    if pred_data is None or pred_data.empty:
+        return None
 
-        pred_data['datetime'] = pd.to_datetime(pred_data['datetime'])
-        X_pred = self.prepare_features(pred_data)
+    pred_data['datetime'] = pd.to_datetime(pred_data['datetime'])
+    
+    # Get predictions
+    predictions = self.model.predict(pred_data)
+    
+    # Create DataFrame with predictions
+    results = pd.DataFrame({
+        'datetime': pred_data['datetime'],
+        'solar_24h': predictions['solar']['24'],
+        'solar_1w': predictions['solar']['168'],
+        'solar_30d': predictions['solar']['720'],
+        'wind_24h': predictions['wind']['24'],
+        'wind_1w': predictions['wind']['168'],
+        'wind_30d': predictions['wind']['720'],
+        'demand_24h': predictions['demand']['24'],
+        'demand_1w': predictions['demand']['168'],
+        'demand_30d': predictions['demand']['720']
+    })
+    
+    return results
 
-        predictions = {'datetime': pred_data['datetime']}
-        for source, model in self.models.items():
-            predictions[source] = model.predict(X_pred)
-
-        return pd.DataFrame(predictions)
-
-    def create_plots(self, predictions, overlay=False, timezone='UTC'):
-        """Create interactive plots with option to overlay and timezone selection"""
-        # Convert datetime to selected timezone
-        predictions = predictions.copy()
-        predictions['datetime'] = predictions['datetime'].dt.tz_localize('UTC').dt.tz_convert(timezone)
-
-        if not overlay:
-            # Original separate plots
-            fig = make_subplots(
-                rows=3,
-                cols=1,
-                subplot_titles=(
-                    f'Energy Generation Forecast ({timezone})',
-                    'Demand Forecast',
-                    'Generation Mix'
-                ),
-                vertical_spacing=0.1,
-                row_heights=[0.4, 0.3, 0.3]
-            )
-
-            # Generation predictions
-            for source in ['solar', 'wind']:
-                color = 'orange' if source == 'solar' else '#00B4D8'
-                fig.add_trace(
-                    go.Scatter(
-                        x=predictions['datetime'],
-                        y=predictions[source],
-                        name=source.title(),
-                        mode='lines+markers',
-                        line=dict(color=color, width=2),
-                        marker=dict(size=6)
-                    ),
-                    row=1,
-                    col=1
-                )
-
-            # Demand prediction
+def create_plots(self, predictions, overlay=False, timezone='UTC', horizon='24h'):
+    """Enhanced plots with multiple time horizons"""
+    predictions = predictions.copy()
+    predictions['datetime'] = predictions['datetime'].dt.tz_localize('UTC').dt.tz_convert(timezone)
+    
+    # Select columns for the chosen horizon
+    solar_col = f'solar_{horizon}'
+    wind_col = f'wind_{horizon}'
+    demand_col = f'demand_{horizon}'
+    
+    if not overlay:
+        fig = make_subplots(
+            rows=4, cols=1,
+            subplot_titles=(
+                f'Energy Generation Forecast - {horizon} ({timezone})',
+                'Demand Forecast',
+                'Generation Mix',
+                'Forecast Comparison'
+            ),
+            vertical_spacing=0.1,
+            row_heights=[0.3, 0.2, 0.2, 0.3]
+        )
+        
+        # Generation predictions
+        for source, col in [('Solar', solar_col), ('Wind', wind_col)]:
+            color = 'orange' if source == 'Solar' else '#00B4D8'
             fig.add_trace(
                 go.Scatter(
                     x=predictions['datetime'],
-                    y=predictions['demand'],
-                    name='Demand',
-                    line=dict(color='#FF4B4B', width=2)
+                    y=predictions[col],
+                    name=f'{source} ({horizon})',
+                    mode='lines+markers',
+                    line=dict(color=color, width=2),
+                    marker=dict(size=6)
                 ),
-                row=2,
-                col=1
+                row=1, col=1
             )
-
-        else:
-            # Overlaid plot
-            fig = make_subplots(
-                rows=2,
-                cols=1,
-                subplot_titles=(
-                    f'Energy Generation and Demand Forecast ({timezone})',
-                    'Generation Mix'
-                ),
-                vertical_spacing=0.2,
-                row_heights=[0.7, 0.3]
-            )
-
-            # Generation and demand predictions (overlaid)
-            for source in ['solar', 'wind', 'demand']:
-                color = 'orange' if source == 'solar' else '#00B4D8' if source == 'wind' else '#FF4B4B'
-                fig.add_trace(
-                    go.Scatter(
-                        x=predictions['datetime'],
-                        y=predictions[source],
-                        name=source.title(),
-                        mode='lines+markers',
-                        line=dict(color=color, width=2),
-                        marker=dict(size=6)
-                    ),
-                    row=1,
-                    col=1
-                )
-
-        # Generation mix (same for both views)
-        total_gen = predictions['solar'] + predictions['wind']
+        
+        # Demand prediction
+        fig.add_trace(
+            go.Scatter(
+                x=predictions['datetime'],
+                y=predictions[demand_col],
+                name=f'Demand ({horizon})',
+                line=dict(color='#FF4B4B', width=2)
+            ),
+            row=2, col=1
+        )
+        
+        # Generation mix
+        total_gen = predictions[solar_col] + predictions[wind_col]
         fig.add_trace(
             go.Bar(
                 x=predictions['datetime'],
-                y=(predictions['solar']/total_gen*100),
+                y=(predictions[solar_col]/total_gen*100),
                 name='Solar %',
                 marker_color='#FFA62B'
             ),
-            row=3 if not overlay else 2,
-            col=1
+            row=3, col=1
         )
         fig.add_trace(
             go.Bar(
                 x=predictions['datetime'],
-                y=(predictions['wind']/total_gen*100),
+                y=(predictions[wind_col]/total_gen*100),
                 name='Wind %',
                 marker_color='#00B4D8'
             ),
-            row=3 if not overlay else 2,
-            col=1
+            row=3, col=1
         )
-
-        # Update layout for dark theme
-        fig.update_layout(
-            height=900,
-            showlegend=True,
-            barmode='stack',
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='white'),
-            title=dict(
-                text=f"Energy Generation and Demand Forecast ({timezone})",
-                font=dict(size=24, color='white'),
-                x=0.5
+        
+        # Forecast comparison across horizons
+        for h in ['24h', '1w', '30d']:
+            fig.add_trace(
+                go.Scatter(
+                    x=predictions['datetime'],
+                    y=predictions[f'solar_{h}'],
+                    name=f'Solar ({h})',
+                    line=dict(dash='dot' if h != horizon else 'solid')
+                ),
+                row=4, col=1
             )
+    
+    # Update layout
+    fig.update_layout(
+        height=1200,
+        showlegend=True,
+        barmode='stack',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white'),
+        title=dict(
+            text=f"Hierarchical Energy Forecast ({timezone})",
+            font=dict(size=24, color='white'),
+            x=0.5
         )
-
-        # Update axes
-        fig.update_xaxes(
-            showgrid=True,
-            gridwidth=1,
-            gridcolor='rgba(128,128,128,0.2)',
-            title_text="Time",
-            title_font=dict(size=14),
-            tickfont=dict(size=12)
-        )
-
-        fig.update_yaxes(
-            showgrid=True,
-            gridwidth=1,
-            gridcolor='rgba(128,128,128,0.2)',
-            title_font=dict(size=14),
-            tickfont=dict(size=12)
-        )
-
-        return fig
+    )
+    
+    return fig
 
 
 def main():
