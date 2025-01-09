@@ -24,7 +24,7 @@ Two models were tested using the same time frames and datasets:
    - Repository: [GitHub Link](https://github.com/jtwirly/energyforecasting/)
 
 **2. Deep Learning (LSTM-based model):**
-   - A custom hierarchical LSTM network for 24-hour (short-term) forecasts.
+   - A custom hierarchical LSTM network for forecasts.
    - Optimized for capturing temporal patterns in energy generation.
    - Results:
       - **Solar energy predictions:** R² = 0.89
