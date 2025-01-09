@@ -51,25 +51,7 @@ Two models were tested using the same time frames and datasets:
    - Modeled temporal dependencies effectively.
    - Exhibited higher prediction variance, particularly for wind energy.
    - Required more tuning and computation than XGBoost.
-
----
-
-#### **Visualizations and Metrics:**
-**1. Solar Energy Prediction:**
-   - **XGBoost**: R² = 0.97 | MAE = 25.50 | RMSE = 50.20
-   - **LSTM**: R² = 0.89 | MAE = 33.32 | RMSE = 60.18  
-   <img src="/mnt/data/Screen%20Shot%202025-01-09%20at%202.16.49%20AM.png" alt="Solar Prediction" />
-
-**2. Wind Energy Prediction:**
-   - **XGBoost**: R² = 0.82 | MAE = 100.35 | RMSE = 150.12
-   - **LSTM**: R² = 0.70 | MAE = 123.72 | RMSE = 157.36  
-   <img src="/mnt/data/Screen%20Shot%202025-01-09%20at%202.16.40%20AM.png" alt="Wind Prediction" />
-
-**3. Electricity Demand Prediction:**
-   - **XGBoost**: R² = 0.94 | MAE = 510.80 | RMSE = 700.15
-   - **LSTM**: R² = 0.91 | MAE = 559.09 | RMSE = 724.89  
-   <img src="/mnt/data/Screen%20Shot%202025-01-09%20at%202.15.22%20AM.png" alt="Demand Prediction" />
-
+     
 ---
 
 #### **Challenges:**
@@ -88,3 +70,15 @@ Two models were tested using the same time frames and datasets:
 
 #### **Conclusion:**
 XGBoost outperformed LSTM for renewable energy forecasting in accuracy and efficiency. However, LSTM models remain a promising choice for temporal dependency modeling in larger and more complex datasets. Future work should explore hybrid frameworks to harness the strengths of both approaches.
+
+<img width="326" alt="Screen Shot 2025-01-09 at 2 19 30 AM" src="https://github.com/user-attachments/assets/e1ec2d93-c475-4cc8-8b58-2f72bf2594d6" />
+<img width="674" alt="Screen Shot 2025-01-09 at 2 19 41 AM" src="https://github.com/user-attachments/assets/582fa270-6a70-4a82-a34d-76790f37cb4d" />
+<img width="553" alt="Screen Shot 2025-01-09 at 2 19 51 AM" src="https://github.com/user-attachments/assets/4243c445-3b3e-4fd2-b9b9-2184db75cab9" />
+
+<img width="336" alt="Screen Shot 2025-01-09 at 2 15 30 AM" src="https://github.com/user-attachments/assets/2152cc2e-d9c7-41a5-b516-bc4fe989475b" />
+<img width="565" alt="Screen Shot 2025-01-09 at 2 15 22 AM" src="https://github.com/user-attachments/assets/cecae72b-98f4-4132-a96b-53d57a00ffd0" />
+
+<img width="332" alt="Screen Shot 2025-01-09 at 2 16 40 AM" src="https://github.com/user-attachments/assets/f1593a57-1156-4a56-8b53-d3ebf1520b70" />
+<img width="560" alt="Screen Shot 2025-01-09 at 2 16 49 AM" src="https://github.com/user-attachments/assets/69ad0c47-55c0-4970-992a-1489a24b9a30" />
+
+
