@@ -103,3 +103,6 @@ XGBoost outperformed deep learning in this study, achieving superior prediction 
 <img width="435" alt="Screen Shot 2025-01-09 at 12 00 19 AM" src="https://github.com/user-attachments/assets/5cf43d68-acfe-45e4-81f4-9dbcbf4b9bb3" />
 <img width="785" alt="Screen Shot 2025-01-08 at 11 40 24 PM" src="https://github.com/user-attachments/assets/cf30a539-a400-4126-af25-a8166da8e0a2" />
 <img width="554" alt="Screen Shot 2025-01-08 at 11 40 47 PM" src="https://github.com/user-attachments/assets/2e3ae9cb-bad5-494e-86a2-2ecaa1f60a8f" />
+<img width="812" alt="Screen Shot 2025-01-09 at 1 33 27 AM" src="https://github.com/user-attachments/assets/357200fe-50f4-473c-b60d-d6c280a8971b" />
+<img width="696" alt="Screen Shot 2025-01-09 at 1 40 57 AM" src="https://github.com/user-attachments/assets/ec0d5cc6-3492-45b7-8366-af0a8af84b27" />
+
