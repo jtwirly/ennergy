@@ -1,85 +1,101 @@
-**Comparative Study of XGBoost and Deep Learning for Renewable Energy Forecasting**  
+### Comparative Study of XGBoost and Deep Learning for Renewable Energy Forecasting
 
-**Objective:**  
-The project aims to compare the performance of traditional machine learning models like XGBoost with advanced deep learning architectures for renewable energy forecasting. By leveraging historical weather data and energy generation records, the project evaluates prediction accuracy for solar, wind, and electricity demand across different time horizons.
-
----
-
-**Problem Statement:**  
-Accurate forecasting of renewable energy generation is critical for integrating solar and wind power into the grid and maintaining grid stability. While deep learning models are powerful at capturing temporal dependencies, traditional models like XGBoost may outperform them due to their robustness and efficiency with tabular datasets.
+#### **Objective:**
+The project aims to compare the performance of traditional machine learning models, like XGBoost, with advanced deep learning architectures for renewable energy forecasting. By leveraging historical weather data, energy generation records, and temporal features, the study evaluates the prediction accuracy for solar, wind, and electricity demand across different time horizons (short-, medium-, and long-term).
 
 ---
 
-**Proposed Solution:**  
-Two models are evaluated:  
-1. **XGBoost:**  
-   - Gradient boosting algorithm optimized for tabular data.  
-   - Forecasts energy generation using historical weather and temporal features.  
-   - Achieved **R-squared (R²): 0.97** for solar energy predictions.
-   - https://github.com/jtwirly/energygenerationforecastdashboard
-
-2. **Deep Learning:**  
-   - A **Hierarchical Energy Forecaster** using LSTM-based encoders for short-term, medium-term, and long-term horizons (24, 168, and 720 hours).  
-   - Predicted solar energy with **R-squared (R²): 0.88**.  
+#### **Problem Statement:**
+Accurate forecasting of renewable energy generation is critical for integrating solar and wind power into the grid, ensuring grid stability, and optimizing energy resource allocation. While deep learning models excel at capturing complex temporal dependencies, traditional machine learning models like XGBoost often outperform deep learning models in tabular datasets due to their robustness, efficiency, and ease of tuning.
 
 ---
 
-**Data:**  
-The project uses a custom dataset combining:  
-- **Weather Data:** Historical temperature, humidity, windspeed, cloud cover, etc.  
-- **Energy Data:** Solar, wind, and electricity demand values over time.  
-- **Temporal Features:** Time-of-day, season, and other temporal indicators.  
+#### **Proposed Solution:**
+Two models were evaluated:
+
+**1. XGBoost:**
+   - Gradient boosting algorithm optimized for tabular data.
+   - Uses historical weather, temporal features, and lagged energy generation data for forecasting.
+   - Achieved high accuracy: 
+      - **Solar energy predictions:** R² = 0.97
+      - **Wind energy predictions:** R² = 0.82
+      - **Electricity demand predictions:** R² = 0.94
+   - Provided faster training and more robust results compared to deep learning.
+   - Repo: https://github.com/jtwirly/energyforecasting/
+
+**2. Deep Learning (LSTM-based model):**
+   - Hierarchical Energy Forecaster using LSTM encoders designed for short-term (24 hours), medium-term (168 hours), and long-term (720 hours) horizons.
+   - Captured temporal dependencies better than XGBoost, particularly for long-term trends.
+   - Achieved lower accuracy compared to XGBoost:
+      - **Solar energy predictions:** R² = 0.88
+      - **Wind energy predictions:** R² = 0.72
+      - **Electricity demand predictions:** R² = 0.8954
 
 ---
 
-**Key Insights:**  
-1. **XGBoost:**  
-   - High accuracy with **R² = 0.97**, low MAE, and RMSE.  
-   - Faster training and easier hyperparameter tuning.  
-   - Outperformed deep learning on this specific dataset.  
-
-2. **Deep Learning (RNN/LSTM):**  
-   - Captured temporal dependencies across short-, medium-, and long-term horizons.  
-   - Performance was lower than XGBoost (**R² = 0.88** for solar energy).  
-   - Required extensive computation and fine-tuning.  
+#### **Data Sources:**
+The project used a custom dataset that integrated:
+   - **Weather Data:** Historical temperature, humidity, windspeed, solar irradiance, cloud cover, etc.
+   - **Energy Data:** Solar, wind, and electricity demand records spanning multiple years.
+   - **Temporal Features:** Time-of-day, day-of-week, seasonal indicators, and other relevant time-series features.
 
 ---
 
-**Visualizations:**  
-1. Predicted vs. Actual Plots:
-   - XGBoost results align closely with actual values, showing superior accuracy.
-   - Deep learning predictions follow trends but exhibit higher variance.  
-2. Scatter Plots:  
-   - Highlighted the tight correlation for XGBoost, with less scatter than RNN.  
+#### **Key Insights:**
+
+**XGBoost:**
+   - Demonstrated superior accuracy and lower errors with MAE and RMSE.
+   - Captured the correlation between input features and energy generation effectively.
+   - Required minimal computation and hyperparameter tuning.
+   - Performed exceptionally well with short-term predictions and structured tabular data.
+
+**Deep Learning (LSTM):**
+   - Successfully modeled temporal dependencies across different horizons.
+   - Showed higher variance and overfitting risk in smaller datasets.
+   - Required careful tuning of hyperparameters (e.g., learning rate, batch size) and network architecture (e.g., number of layers, units).
+   - Benefited from multi-modal data (e.g., combining weather, energy, and temporal features).
+   - Underperformed relative to XGBoost on this dataset due to limited size and complexity of tabular data.
 
 ---
 
-**Challenges:**  
-- Deep learning models required careful tuning to avoid overfitting.  
-- XGBoost’s simplicity was advantageous, especially with tabular data.  
-- Scaling the RNN to longer horizons (720 hours) introduced noise and instability.  
+#### **Visualizations:**
+1. **Predicted vs. Actual Plots:**
+   - XGBoost closely tracked actual values with minimal deviations.
+   - LSTM predictions captured overall trends but exhibited higher variance and noise.
+
+2. **Scatter Plots:**
+   - XGBoost showed tighter correlation between predicted and actual values.
+   - LSTM had larger scatter, reflecting its relative instability.
+
+3. **Error Metrics (MAE and RMSE):**
+   - XGBoost consistently achieved lower errors across all datasets and horizons.
 
 ---
 
-**Impact:**  
-This project demonstrates the relative strengths of XGBoost and deep learning for renewable energy forecasting:  
-- **XGBoost** is highly effective for structured/tabular datasets, achieving better accuracy with lower computational cost.  
-- **Deep Learning** is more flexible for capturing temporal dependencies and scaling to complex, multi-modal datasets.
+#### **Challenges:**
+- Deep learning models required significant computational resources and fine-tuning to avoid overfitting.
+- XGBoost’s simplicity and robustness provided an advantage, especially with structured datasets.
+- Extending LSTMs to long-term horizons (e.g., 720 hours) introduced instability and amplified prediction errors.
 
 ---
 
-**Future Directions:**  
-- Explore **hybrid models** combining XGBoost’s efficiency with RNN’s temporal modeling.  
-- Test on larger, multi-modal datasets to exploit deep learning’s full potential.  
-- Expand to edge deployment for real-time energy management.
+#### **Impact:**
+This study highlights the relative strengths and trade-offs of XGBoost and deep learning for renewable energy forecasting:
+   - XGBoost excels at structured/tabular datasets, achieving higher accuracy with lower computational costs.
+   - Deep learning is more versatile for modeling temporal dependencies, especially when working with larger, multi-modal datasets.
 
-**Conclusion:**  
-XGBoost outperformed deep learning in this study, achieving superior prediction accuracy. However, deep learning remains a promising option for more complex data and longer-term forecasting tasks.  
+---
 
-**Keywords:** XGBoost, Deep Learning, Renewable Energy Forecasting, RNN, LSTM, Time-Series Analysis.  
+#### **Future Directions:**
+1. **Hybrid Models:** Combine XGBoost’s feature handling and efficiency with LSTM’s ability to model sequential dependencies for improved accuracy.
+2. **Larger Datasets:** Explore the use of extensive, multi-modal datasets to exploit deep learning’s strengths fully.
+3. **Real-Time Deployment:** Investigate the potential for edge deployment of hybrid models for real-time grid management.
+4. **Fine-Tuning Deep Learning:** Experiment with advanced architectures (e.g., Transformer models) to enhance long-term forecasting accuracy.
 
-**Call to Action:**  
-We look forward to feedback on improving deep learning performance and exploring hybrid approaches to bridge the gap between traditional ML and neural networks.
+---
+
+#### **Conclusion:**
+XGBoost outperformed deep learning in this study, achieving superior prediction accuracy and reliability for renewable energy forecasting. However, deep learning remains a promising tool for tackling more complex datasets and longer-term forecasting tasks. Future work will focus on hybrid modeling approaches to combine the strengths of both methods.
 
 <img width="458" alt="Screen Shot 2025-01-08 at 11 39 06 PM" src="https://github.com/user-attachments/assets/05afe1d4-2b3f-4e29-8d23-203fb574afd2" />
 
