@@ -1,4 +1,4 @@
-**Title:** Comparative Study of XGBoost and Deep Learning for Renewable Energy Forecasting  
+**Comparative Study of XGBoost and Deep Learning for Renewable Energy Forecasting**  
 
 **Objective:**  
 The project aims to compare the performance of traditional machine learning models like XGBoost with advanced deep learning architectures for renewable energy forecasting. By leveraging historical weather data and energy generation records, the project evaluates prediction accuracy for solar, wind, and electricity demand across different time horizons.
