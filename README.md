@@ -21,7 +21,7 @@ Three models were tested using the same time frames and datasets:
       - **Wind energy predictions:** R² = 0.82
       - **Electricity demand predictions:** R² = 0.94
    - Fast training and low computational requirements.
-   - Repository: [GitHub Link](https://github.com/jtwirly/energyforecasting/)
+   - Repository: [GitHub Link](https://github.com/jtwirly/energygenerationforecastdashboard/)
 
 **2. Deep Learning (RNN-based LSTM):**
    - A custom hierarchical Long Short-Term Memory (LSTM) network, a type of Recurrent Neural Network (RNN), for forecasts.
