@@ -93,6 +93,9 @@ The time ranges are consistent across datasets, with only a minor difference in 
 #### **Conclusion:**
 While XGBoost provided the most efficient and accurate predictions overall, the CNN model showed strong potential for renewable energy forecasting, particularly for wind energy predictions. Future work should explore hybrid frameworks to harness the strengths of both approaches and improve grid optimization strategies.
 
+---
+
+#### **RNN:**
 <img width="319" alt="Screen Shot 2025-01-09 at 2 30 10 AM" src="https://github.com/user-attachments/assets/06a1cef0-c240-4dee-ba4d-9ba01706c787" />
 <img width="336" alt="Screen Shot 2025-01-09 at 2 15 30 AM" src="https://github.com/user-attachments/assets/2152cc2e-d9c7-41a5-b516-bc4fe989475b" />
 <img width="332" alt="Screen Shot 2025-01-09 at 2 16 40 AM" src="https://github.com/user-attachments/assets/f1593a57-1156-4a56-8b53-d3ebf1520b70" />
@@ -101,8 +104,25 @@ While XGBoost provided the most efficient and accurate predictions overall, the 
 
 <img width="553" alt="Screen Shot 2025-01-09 at 2 19 51 AM" src="https://github.com/user-attachments/assets/4243c445-3b3e-4fd2-b9b9-2184db75cab9" />
 
+
+
 <img width="565" alt="Screen Shot 2025-01-09 at 2 15 22 AM" src="https://github.com/user-attachments/assets/cecae72b-98f4-4132-a96b-53d57a00ffd0" />
 
 <img width="560" alt="Screen Shot 2025-01-09 at 2 16 49 AM" src="https://github.com/user-attachments/assets/69ad0c47-55c0-4970-992a-1489a24b9a30" />
+
+
+---
+
+#### **CNN:**
+
+<img width="1109" alt="Screen Shot 2025-01-10 at 1 23 24 AM" src="https://github.com/user-attachments/assets/6812e63c-ddae-4505-b65f-0f51614b2b31" />
+
+<img width="1106" alt="Screen Shot 2025-01-10 at 1 34 07 AM" src="https://github.com/user-attachments/assets/87ec0716-7786-4321-9a85-3f62c7a858f2" />
+
+<img width="1098" alt="Screen Shot 2025-01-10 at 1 45 14 AM" src="https://github.com/user-attachments/assets/4221fae6-6730-4224-a276-29928e800afc" />
+
+<img width="260" alt="Screen Shot 2025-01-10 at 1 44 57 AM" src="https://github.com/user-attachments/assets/f23815e2-d338-44d4-b318-6789697dc9d8" />
+
+
 
 
