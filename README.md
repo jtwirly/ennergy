@@ -69,7 +69,6 @@ Three models were tested using the same time frames and datasets:
 #### **Challenges:**
 - LSTM and CNN required significant resources and tuning to avoid overfitting.
 - XGBoost excelled with minimal computation due to its simplicity.
-- Deep learning struggled with limited dataset size, affecting long-term forecasts.
 
 ---
 
@@ -85,7 +84,3 @@ While XGBoost provided the most efficient and accurate predictions overall, the 
 
 <img width="809" alt="Screen Shot 2025-01-10 at 2 22 08 PM" src="https://github.com/user-attachments/assets/78721d60-07ef-4e4c-b096-1e37f73b2453" />
 <img width="461" alt="Screen Shot 2025-01-10 at 2 22 20 PM" src="https://github.com/user-attachments/assets/9822e1bf-6437-45a2-b014-254c002ff02f" />
-
-
-
-
