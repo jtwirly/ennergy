@@ -35,8 +35,8 @@ Three models were tested using the same time frames and datasets:
    - A custom CNN architecture designed to identify spatial and temporal patterns in the data.
    - Metrics for CNN-based predictions:
       - **Solar energy predictions:** R² = 0.92
-      - **Wind energy predictions:** R² = 0.92
-      - **Electricity demand predictions:** R² = 0.86
+      - **Wind energy predictions:** R² = 0.93
+      - **Electricity demand predictions:** R² = 0.87
 
 ---
 
@@ -73,16 +73,6 @@ Three models were tested using the same time frames and datasets:
 
 ---
 
-#### **Dataset Time Periods:**
-All datasets covered consistent time periods:
-- **Solar Energy (`SUN_data_NE`)**: From **2022-10-27 00:00:00** to **2024-10-26 23:00:00**.
-- **Wind Energy (`WND_data_NE`)**: From **2022-10-27 00:00:00** to **2024-10-27 00:00:00**.
-- **Electricity Demand (`demand_data_NE`)**: From **2022-10-27 00:00:00** to **2024-10-27 00:00:00**.
-
-The time ranges are consistent across datasets, with only a minor difference in the end timestamp for solar data.
-
----
-
 #### **Future Directions:**
 1. **Hybrid Models:** Combine XGBoost's feature handling with CNN/LSTM's temporal modeling.
 2. **Larger Datasets:** Incorporate extensive multi-modal data to enhance deep learning performance.
@@ -92,4 +82,10 @@ The time ranges are consistent across datasets, with only a minor difference in 
 
 #### **Conclusion:**
 While XGBoost provided the most efficient and accurate predictions overall, the CNN model showed strong potential for renewable energy forecasting, particularly for wind energy predictions. Future work should explore hybrid frameworks to harness the strengths of both approaches and improve grid optimization strategies.
+
+<img width="809" alt="Screen Shot 2025-01-10 at 2 22 08 PM" src="https://github.com/user-attachments/assets/78721d60-07ef-4e4c-b096-1e37f73b2453" />
+<img width="461" alt="Screen Shot 2025-01-10 at 2 22 20 PM" src="https://github.com/user-attachments/assets/9822e1bf-6437-45a2-b014-254c002ff02f" />
+
+
+
 
